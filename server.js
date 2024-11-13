@@ -21,7 +21,7 @@ app.get('/api/anime/:year/:season', async (req, res) => {
         'X-MAL-CLIENT-ID': process.env.VITE_MYANIMELIST_API_KEY,
       },
       params: {
-        limit: 10,
+        limit: 100,
         offset: offset,
         fields: 'mean,main_picture,title,media_type',
         sort: 'anime_score',
