@@ -1,19 +1,19 @@
-#Anime Viewer
+# Anime Viewer
 Anime Viewer is a minimalist web application for exploring top-rated anime by season and year. Built with a focus on simplicity and elegance, this app allows users to filter anime based on type (series or movie), search within results, and view ratings.
 
-##Tech Stack
+## Tech Stack
 Frontend: Svelte, TailwindCSS
 Backend: Node.js, Express
 APIs: MyAnimeList API
 Icons: Font Awesome
-##Features
+## Features
 Filter by Type: Toggle between viewing anime series and movies.
 Season and Year Filters: Select a specific season and year to browse anime released in that timeframe.
 Search Functionality: Search anime titles within the current results.
 Infinite Scroll: Automatically loads more anime as you scroll.
 Anime Rating Display: View scores from MyAnimeList for each anime.
 
-##Installation
+## Installation
 Clone the repository:
 
 git clone https://github.com/your-username/anime-viewer.git
@@ -38,14 +38,14 @@ Open a new terminal, navigate to the project directory, and run:
 node server.js
 This will start the Node.js proxy server at http://localhost:5000, required for interacting with the MyAnimeList API.
 
-##Usage
+## Usage
 Open the app in your browser.
 Use the season and year dropdown filters to browse anime by specific seasons.
 Toggle between Series and Movies to view anime of your preferred type.
 Use the search bar to find specific anime titles within the current results.
 Scroll down to automatically load more anime.
 
-##Project Structure
+## Project Structure
 src: Contains all Svelte components, styles, and assets.
 components: Reusable UI components.
 stores: Svelte stores for managing state.
@@ -59,6 +59,6 @@ Build the project:
 npm run build
 Deploy: Deploy the contents of the dist folder using your chosen platform.
 
-##License
+## License
 This project is licensed under the MIT License.
 
