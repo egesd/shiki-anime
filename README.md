@@ -1,47 +1,62 @@
-# Svelte + Vite
+Anime Viewer
+Anime Viewer is a minimalist web application for exploring top-rated anime by season and year. Built with a focus on simplicity and elegance, this app allows users to filter anime based on type (series or movie), search within results, and view ratings.
 
-This template should help get you started developing with Svelte in Vite.
+Tech Stack
+Frontend: Svelte, TailwindCSS
+Backend: Node.js, Express
+APIs: MyAnimeList API
+Icons: Font Awesome
+Features
+Filter by Type: Toggle between viewing anime series and movies.
+Season and Year Filters: Select a specific season and year to browse anime released in that timeframe.
+Search Functionality: Search anime titles within the current results.
+Infinite Scroll: Automatically loads more anime as you scroll.
+Anime Rating Display: View scores from MyAnimeList for each anime.
+Installation
+Clone the repository:
 
-## Recommended IDE Setup
+git clone https://github.com/your-username/anime-viewer.git
+cd anime-viewer
+Install dependencies:
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+npm install
+Set up environment variables:
 
-## Need an official Svelte framework?
+Create a .env file in the root directory with your MyAnimeList API key:
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+VITE_MYANIMELIST_API_KEY=your_api_key_here
+Run the development server:
 
-## Technical considerations
+npm run dev
+This will start the Vite development server. You can access the app in your browser at http://localhost:5173.
 
-**Why use this over SvelteKit?**
+Run the proxy server:
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+Open a new terminal, navigate to the project directory, and run:
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+node server.js
+This will start the Node.js proxy server at http://localhost:5000, required for interacting with the MyAnimeList API.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+Usage
+Open the app in your browser.
+Use the season and year dropdown filters to browse anime by specific seasons.
+Toggle between Series and Movies to view anime of your preferred type.
+Use the search bar to find specific anime titles within the current results.
+Scroll down to automatically load more anime.
+Project Structure
+src: Contains all Svelte components, styles, and assets.
+components: Reusable UI components.
+stores: Svelte stores for managing state.
+assets: Icons, images, and other static files.
+server.js: Node.js/Express proxy server for the MyAnimeList API.
+Deployment
+To deploy the app, you can use any static hosting provider (e.g., Netlify, Vercel, GitHub Pages). Here’s a quick guide:
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+Build the project:
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+npm run build
+Deploy: Deploy the contents of the dist folder using your chosen platform.
 
-**Why include `.vscode/extensions.json`?**
+License
+This project is licensed under the MIT License.
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
