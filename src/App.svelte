@@ -8,11 +8,14 @@
     faStar,
     faCalendarAlt,
     faFilter,
+    faTv,
+    faFilm,
   } from '@fortawesome/free-solid-svg-icons';
 
   let season = 'spring';
   let year = 2023;
   let searchQuery = ''; // New reactive variable for the search term
+  let mediaFilter = 'tv'; // "tv" by default for series view
 
   // Load initial anime data
   fetchAnimeData(season, year, true);
@@ -33,24 +36,38 @@
   });
 
   // Reactive statement to filter anime based on the search query
-  $: filteredAnime = $animeData.filter((anime) =>
-    anime.node.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
-  // Icons
-  const searchIcon = faSearch;
-  const starIcon = faStar;
-  const calendarIcon = faCalendarAlt;
-  const filterIcon = faFilter;
+  // Filter anime based on selected type
+  $: filteredAnime = $animeData
+    .filter((anime) => anime.node.media_type === mediaFilter)
+    .filter((anime) =>
+      anime.node.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 </script>
 
 <Header />
 
 <main class="p-4">
+  <!-- Media Filter Toggle -->
+  <div class="mb-4 flex items-center justify-center gap-4">
+    <button
+      class="p-2 rounded-lg bg-primary text-white hover:bg-secondary transition"
+      on:click={() => (mediaFilter = 'tv')}
+    >
+      <FontAwesomeIcon icon={faTv} class="mr-2" /> Series
+    </button>
+    <button
+      class="p-2 rounded-lg bg-primary text-white hover:bg-secondary transition"
+      on:click={() => (mediaFilter = 'movie')}
+    >
+      <FontAwesomeIcon icon={faFilm} class="mr-2" /> Movies
+    </button>
+  </div>
+
   <!-- Search Input -->
   <div class="mb-4 flex items-center justify-center gap-4">
     <label for="search" class="text-accent3">
-      <FontAwesomeIcon icon={searchIcon} class="mr-1" />
+      <FontAwesomeIcon icon={faSearch} class="mr-1" />
       Search:
     </label>
     <input
@@ -64,8 +81,9 @@
 
   <!-- Season and Year Selectors -->
   <div class="mb-4 flex items-center justify-center gap-4">
+    <!-- Season Select with icon -->
     <label for="season" class="text-accent3">
-      <FontAwesomeIcon icon={filterIcon} class="mr-1" />
+      <FontAwesomeIcon icon={faFilter} class="mr-1" />
       Season:
     </label>
     <select
@@ -80,8 +98,9 @@
       <option value="fall">Fall</option>
     </select>
 
+    <!-- Year Select with icon -->
     <label for="year" class="text-accent3">
-      <FontAwesomeIcon icon={calendarIcon} class="mr-1" />
+      <FontAwesomeIcon icon={faCalendarAlt} class="mr-1" />
       Year:
     </label>
     <select
@@ -125,7 +144,7 @@
           </div>
           {#if anime.node.mean !== undefined}
             <p class="text-center text-xl font-semibold text-accent3 mt-2">
-              <FontAwesomeIcon icon={starIcon} class="mr-1" />
+              <FontAwesomeIcon icon={faStar} class="mr-1" />
               {anime.node.mean.toFixed(1)}
             </p>
           {:else}
@@ -134,10 +153,5 @@
         </div>
       {/each}
     </div>
-  {/if}
-
-  <!-- Infinite Scroll Loading Indicator -->
-  {#if $loading && $animeData.length}
-    <p class="text-center text-accent3 mt-4">Loading more...</p>
   {/if}
 </main>
