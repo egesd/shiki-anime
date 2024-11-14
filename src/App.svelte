@@ -152,30 +152,36 @@
                 class="absolute top-0 left-0 w-full h-full object-cover"
                 loading="lazy"
               />
-            </div>
-
-            <!-- Title and Score Section -->
-            <div class="p-3 flex justify-between items-center">
-              <h2
-                class="text-lg font-semibold text-white truncate"
-                title={anime.node.title}
-              >
-                {anime.node.title}
-              </h2>
               {#if anime.node.mean !== undefined}
-                <p class="text-sm text-accent2 flex items-center">
+                <!-- Score in top-right corner of image -->
+                <p
+                  class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-white text-sm px-2 py-1 rounded"
+                >
                   <FontAwesomeIcon icon={faStar} class="mr-1" />
                   {anime.node.mean.toFixed(1)}
                 </p>
               {/if}
             </div>
 
+            <!-- Title and Score Section -->
+            <!-- Title Section with Truncation -->
+            <div class="p-3 h-20 flex items-center justify-center">
+              <h2
+                class="text-md font-semibold text-white font-bruce text-center"
+                title={anime.node.title}
+              >
+                {anime.node.title.length > 35
+                  ? anime.node.title.slice(0, 35) + '...'
+                  : anime.node.title}
+              </h2>
+            </div>
+
             <!-- Hover Modal for Anime Details -->
             {#if hoverAnime === anime}
               <div
-                class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10"
+                class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center"
               >
-                <h2 class="text-xl font-bold mb-2 font-yoruka">
+                <h2 class="text-xl font-bold mb-2 font-bruce">
                   {anime.node.title}
                 </h2>
                 <p class="mb-2">
@@ -204,7 +210,11 @@
                   <div class="mt-2 flex flex-col items-center text-center">
                     <strong>Broadcast:</strong>
                     <p class="mt-1">
-                      {anime.node.broadcast.day_of_the_week || 'Unknown'} at
+                      <span class="capitalize"
+                        >{anime.node.broadcast.day_of_the_week ||
+                          'Unknown'}</span
+                      >
+                      at
                       {anime.node.broadcast.start_time || 'Unknown'}
                     </p>
                   </div>

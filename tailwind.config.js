@@ -19,6 +19,7 @@ module.exports = {
       },
       fontFamily: {
         yoruka: ['Yoruka'], // Custom font family
+        bruce:['Bruce'],
       },
     },
   },

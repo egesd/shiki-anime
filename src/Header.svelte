@@ -16,7 +16,7 @@
     </div>
 
     <!-- App Description -->
-    <h2 class="text-sm italic text-h4 text-accent2">
+    <h2 class="text-h3 text-accent2 font-yoruka">
       Explore top-rated anime by season and year
     </h2>
 
