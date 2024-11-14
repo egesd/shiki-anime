@@ -10,15 +10,15 @@
   <div class="container mx-auto flex justify-between items-center">
     <!-- App Title -->
     <div class="flex justify-between gap-3 items-center">
-      <FontAwesomeIcon icon={logoIcon} class="text-3xl text-accent1" />
+      <FontAwesomeIcon icon={logoIcon} class="text-3xl text-black" />
       <!-- Logo icon -->
-      <h1 class="text-3xl font-bold text-accent2">Anime Viewer</h1>
+      <h1 class="text-3xl font-bold text-accent2 font-yoruka">Anime Viewer</h1>
     </div>
-    
+
     <!-- App Description -->
-    <p class="text-sm italic text-accent2">
+    <h2 class="text-sm italic text-h4 text-accent2">
       Explore top-rated anime by season and year
-    </p>
+    </h2>
 
     <!-- Navigation Links -->
     <nav class="space-x-4">
@@ -31,7 +31,7 @@
         MyAnimeList
       </a>
       <a
-        href="https://github.com/your-username/anime-viewer"
+        href="https://github.com/egesd/anime-viewer"
         target="_blank"
         rel="noopener noreferrer"
         class="hover:text-accent1 transition-colors duration-200"

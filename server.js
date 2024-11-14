@@ -21,9 +21,9 @@ app.get('/api/anime/:year/:season', async (req, res) => {
         'X-MAL-CLIENT-ID': process.env.VITE_MYANIMELIST_API_KEY,
       },
       params: {
-        limit: 10,
+        limit: 500,
         offset: offset,
-        fields: 'mean,main_picture,title,media_type,genres,studios,episodes', // Added fields
+        fields: 'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast', // Added fields
         sort: 'anime_score',
       },
     });
