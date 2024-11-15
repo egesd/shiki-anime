@@ -2,6 +2,12 @@
   import { animeData, loading, error, fetchAnimeData } from './animeStore.js';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import {
+    faSnowflake,
+    faSeedling,
+    faSun,
+    faLeaf,
+  } from '@fortawesome/free-solid-svg-icons';
+  import {
     faSearch,
     faStar,
     faTv,
@@ -56,17 +62,17 @@
 <Header />
 
 <main class="p-4 bg-primary min-h-screen text-secondary flex justify-center">
-  <div class="w-full max-w-screen-lg">
+  <div class="w-full max-w-screen-xl">
     <!-- Media Filter Toggle -->
     <div class="mb-4 flex items-center justify-center gap-4">
       <button
-        class="p-2 rounded-lg bg-accent2 text-primary"
+        class="p-2 rounded-lg bg-accent2 text-primary text-xl"
         on:click={() => (mediaFilter = 'tv')}
       >
         <FontAwesomeIcon icon={faTv} class="mr-2" /> Series
       </button>
       <button
-        class="p-2 rounded-lg bg-accent2 text-primary"
+        class="p-2 rounded-lg bg-accent2 text-primary text-xl"
         on:click={() => (mediaFilter = 'movie')}
       >
         <FontAwesomeIcon icon={faFilm} class="mr-2" /> Movies
@@ -90,36 +96,68 @@
 
     <!-- Season and Year Selectors -->
     <div class="mb-4 flex items-center justify-center gap-4">
-      <label for="season" class="text-accent2">
-        <FontAwesomeIcon icon={faFilter} class="mr-1" />
-        Season:
-      </label>
-      <select
-        id="season"
-        bind:value={season}
-        on:change={() => fetchAnimeData(season, year, true)}
-        class="p-2 rounded bg-secondary text-white placeholder-white"
-      >
-        <option value="winter">Winter</option>
-        <option value="spring">Spring</option>
-        <option value="summer">Summer</option>
-        <option value="fall">Fall</option>
-      </select>
+      <div class="flex items-center justify-center gap-4">
+        <div class="flex gap-2 items-center">
+          <p aria-roledescription="label" class="text-accent2 mr-2">Season:</p>
+          <button
+            class="p-2 rounded-lg bg-secondary text-white hover:bg-accent1 transition-all"
+            class:bg-accent2={season === 'winter'}
+            on:click={() => {
+              season = 'winter';
+              fetchAnimeData(season, year, true);
+            }}
+          >
+            <FontAwesomeIcon icon={faSnowflake} class="mr-1" /> Winter
+          </button>
+          <button
+            class="p-2 rounded-lg bg-secondary text-white hover:bg-accent1 transition-all"
+            class:bg-accent2={season === 'spring'}
+            on:click={() => {
+              season = 'spring';
+              fetchAnimeData(season, year, true);
+            }}
+          >
+            <FontAwesomeIcon icon={faSeedling} class="mr-1" /> Spring
+          </button>
+          <button
+            class="p-2 rounded-lg bg-secondary text-white hover:bg-accent1 transition-all"
+            class:bg-accent2={season === 'summer'}
+            on:click={() => {
+              season = 'summer';
+              fetchAnimeData(season, year, true);
+            }}
+          >
+            <FontAwesomeIcon icon={faSun} class="mr-1" /> Summer
+          </button>
+          <button
+            class="p-2 rounded-lg bg-secondary text-white hover:bg-accent1 transition-all"
+            class:bg-accent2={season === 'fall'}
+            on:click={() => {
+              season = 'fall';
+              fetchAnimeData(season, year, true);
+            }}
+          >
+            <FontAwesomeIcon icon={faLeaf} class="mr-1" /> Fall
+          </button>
+        </div>
+      </div>
 
-      <label for="year" class="text-accent2">
-        <FontAwesomeIcon icon={faCalendarAlt} class="mr-1" />
-        Year:
-      </label>
-      <select
-        id="year"
-        bind:value={year}
-        on:change={() => fetchAnimeData(season, year, true)}
-        class="p-2 rounded bg-secondary text-white placeholder-white"
-      >
-        {#each Array.from({ length: 25 }, (_, i) => new Date().getFullYear() - i) as option}
-          <option value={option}>{option}</option>
-        {/each}
-      </select>
+      <div class="flex gap-2 items-center">
+        <label for="year" class="text-accent2 mr-1">
+          <FontAwesomeIcon icon={faCalendarAlt} class="mr-1" />
+          Year:
+        </label>
+        <select
+          id="year"
+          bind:value={year}
+          on:change={() => fetchAnimeData(season, year, true)}
+          class="p-2 rounded bg-secondary text-white placeholder-white"
+        >
+          {#each Array.from({ length: 25 }, (_, i) => new Date().getFullYear() - i) as option}
+            <option value={option}>{option}</option>
+          {/each}
+        </select>
+      </div>
     </div>
 
     <!-- Display Anime Cards -->
@@ -138,10 +176,18 @@
       >
         {#each filteredAnime as anime}
           <div
-            role="tooltip"
+            role="button"
+            tabindex="0"
             class="relative bg-secondary rounded-lg overflow-hidden shadow-lg flex flex-col text-primary"
             on:mouseenter={() => handleMouseEnter(anime)}
             on:mouseleave={handleMouseLeave}
+            on:focus={() => handleMouseEnter(anime)}
+            on:blur={handleMouseLeave}
+            on:keydown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                handleMouseEnter(anime);
+              }
+            }}
           >
             <!-- Image wrapper with fixed aspect ratio -->
             <div class="relative w-full" style="padding-bottom: 150%;">
@@ -177,54 +223,53 @@
             </div>
 
             <!-- Hover Modal for Anime Details -->
-            {#if hoverAnime === anime}
-              <div
-                class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center"
-              >
-                <h2 class="text-xl font-bold mb-2 font-bruce">
-                  {anime.node.title}
-                </h2>
-                <p class="mb-2">
-                  <strong>Episodes:</strong>
-                  {anime.node.num_episodes || 'N/A'}
-                </p>
-                <p class="mb-2">
-                  <strong>Studio:</strong>
-                  {anime.node.studios?.[0]?.name || 'Unknown'}
-                </p>
-                <div class="mb-2">
-                  <strong>Genres:</strong>
-                  <div class="flex gap-2 mt-1 flex-wrap">
-                    {#each anime.node.genres as genre}
-                      <div class="flex items-center gap-1">
-                        {#if genreIcons[genre.name]}
-                          <FontAwesomeIcon icon={genreIcons[genre.name]} />
-                        {/if}
-                        <span>{genre.name}</span>
-                      </div>
-                    {/each}
-                    <!-- Broadcast Data -->
-                  </div>
+            <!-- {#if hoverAnime === anime} -->
+            <div
+              class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center gap-2"
+            >
+              <h2 class="text-xl font-bold mb-2 font-bruce">
+                {anime.node.title}
+              </h2>
+              <p>
+                <strong>Episodes:</strong>
+                {anime.node.num_episodes || 'N/A'}
+              </p>
+              <p>
+                <strong>Studio:</strong>
+                {anime.node.studios?.[0]?.name || 'Unknown'}
+              </p>
+              <div>
+                <strong>Genres:</strong>
+                <div class="flex gap-2 mt-1 flex-wrap justify-center">
+                  {#each anime.node.genres as genre}
+                    <div class="flex items-center gap-1">
+                      {#if genreIcons[genre.name]}
+                        <FontAwesomeIcon icon={genreIcons[genre.name]} />
+                      {/if}
+                      <span>{genre.name}</span>
+                    </div>
+                  {/each}
+                  <!-- Broadcast Data -->
                 </div>
-                {#if anime.node.broadcast}
-                  <div class="mt-2 flex flex-col items-center text-center">
-                    <strong>Broadcast:</strong>
-                    <p class="mt-1">
-                      <span class="capitalize"
-                        >{anime.node.broadcast.day_of_the_week ||
-                          'Unknown'}</span
-                      >
-                      at
-                      {anime.node.broadcast.start_time || 'Unknown'}
-                    </p>
-                  </div>
-                {/if}
               </div>
-            {/if}
+              {#if anime.node.broadcast}
+                <div class="mt-2 flex flex-col items-center text-center">
+                  <strong>Broadcast:</strong>
+                  <p class="mt-1">
+                    <span class="capitalize"
+                      >{anime.node.broadcast.day_of_the_week || 'Unknown'}</span
+                    >
+                    at
+                    {anime.node.broadcast.start_time || 'Unknown'}
+                  </p>
+                </div>
+              {/if}
+            </div>
+            <!-- {/if} -->
           </div>
         {/each}
       </div>
-    {:else}
+    {:else if !$loading && !filteredAnime.length}
       <h2 class="text-center text-accent2">No anime found.</h2>
     {/if}
 

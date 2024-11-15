@@ -7,7 +7,7 @@
 
 <!-- Header.svelte -->
 <header class="bg-secondary text-secondary p-4 shadow-md">
-  <div class="container mx-auto flex justify-between items-center">
+  <div class="container mx-auto flex justify-between items-center max-sm:flex-col max-sm:gap-3">
     <!-- App Title -->
     <div class="flex justify-between gap-3 items-center">
       <FontAwesomeIcon icon={logoIcon} class="text-3xl text-black" />
