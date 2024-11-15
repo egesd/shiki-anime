@@ -8,20 +8,16 @@ dotenv.config(); // Load environment variables
 const app = express();
 const PORT = 5000;
 
-app.use(cors()); // Enable CORS for all routes
-
-// Route to fetch anime data for a given season and year
-let offset = 0; // Initialize server-side offset
+app.use(cors({
+  origin: 'http://localhost:5173', // Allow requests from the frontend
+}));
 
 app.get('/api/anime/:year/:season', async (req, res) => {
   const { year, season } = req.params;
-  const reset = req.query.reset === 'true'; // Check if this is a reset request
   const limit = parseInt(req.query.limit) || 100;
+  const offset = parseInt(req.query.offset) || 0; // Use offset from frontend
 
-  // Reset offset if a new season/year is requested
-  if (reset) {
-    offset = 0;
-  }
+  console.log(`Fetching data for season: ${season}, year: ${year}, offset: ${offset}, limit: ${limit}`);
 
   try {
     const response = await axios.get(
@@ -31,22 +27,26 @@ app.get('/api/anime/:year/:season', async (req, res) => {
           'X-MAL-CLIENT-ID': process.env.VITE_MYANIMELIST_API_KEY,
         },
         params: {
-          limit: limit,
-          offset: offset,
-          fields:
-            'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast',
+          limit,
+          offset,
+          fields: 'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast',
         },
       }
     );
 
-    const uniqueData = [];
-    const existingIds = new Set(); // Track unique anime IDs
+    // Check if API returned any data; if not, stop further requests
+    if (!response.data || !response.data.data || response.data.data.length === 0) {
+      console.log('No more data available from the API');
+      return res.json([]); // Return an empty array to signify no more data
+    }
 
-    // Filter out duplicates and low scores
+    const uniqueData = [];
+    const existingIds = new Set();
+
+    // Filter duplicates and low scores
     response.data.data.forEach((anime) => {
       const animeId = anime.node.id;
-      // Only add if score >= 7 and not already added
-      if (anime.node.mean >= 7 && !existingIds.has(animeId)) {
+      if ((anime.node.mean ?? 0) >= 7 && !existingIds.has(animeId)) {
         existingIds.add(animeId);
         uniqueData.push(anime);
       }
@@ -55,14 +55,10 @@ app.get('/api/anime/:year/:season', async (req, res) => {
     // Sort by score in descending order
     uniqueData.sort((a, b) => (b.node.mean ?? 0) - (a.node.mean ?? 0));
 
-    offset += limit; // Increment the offset for the next request
-
+    console.log(`Returning ${uniqueData.length} anime(s), offset for next request will be managed by frontend`);
     res.json(uniqueData);
   } catch (error) {
-    console.error(
-      'Error fetching data from MyAnimeList:',
-      error.response?.data || error.message
-    );
+    console.error('Error fetching data from MyAnimeList:', error.response?.data || error.message);
     res.status(500).json({
       error: 'Error fetching data from MyAnimeList',
       details: error.response?.data || error.message,

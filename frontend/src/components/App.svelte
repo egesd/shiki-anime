@@ -33,6 +33,18 @@
   let searchQuery = '';
   let hoverAnime = null;
 
+  function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
   // Load initial anime data
   fetchAnimeData(season, year, true);
 
@@ -60,6 +72,8 @@
       fetchAnimeData(season, year);
     }
   }
+
+  const debouncedHandleScroll = debounce(handleScroll, 200);
 
   onMount(() => {
     window.addEventListener('scroll', handleScroll);
