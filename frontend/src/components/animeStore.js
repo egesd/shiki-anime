@@ -6,6 +6,8 @@ export const loading = writable(false);
 export const error = writable(null);
 let offset = 0; // Track the current offset
 let noMoreData = false; // Flag to indicate when no more data is available
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 
 export async function fetchAnimeData(season, year, reset = false) {
   loading.set(true);
@@ -23,7 +25,7 @@ export async function fetchAnimeData(season, year, reset = false) {
   }
 
   try {
-    const response = await axios.get(`http://localhost:5000/api/anime/${year}/${season}`, {
+    const response = await axios.get(`${API_URL}/api/anime/${year}/${season}`, {
       params: { offset }, // Pass offset to server
     });
 

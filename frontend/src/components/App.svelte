@@ -116,7 +116,7 @@
           <SlideIn distance={30} duration={500}>
             <AnimeCard
               {anime}
-              on:hoverEnter={(e) => handleMouseEnter(e.detail)}
+              on:hoverEnter={handleMouseEnter}
               on:hoverLeave={handleMouseLeave}
             />
           </SlideIn>
