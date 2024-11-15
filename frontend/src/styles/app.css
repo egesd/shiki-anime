@@ -74,14 +74,14 @@ button:focus-visible {
 
 @font-face {
   font-family: 'Yoruka';
-  src: url('/src/assets/fonts/Yoruka.ttf') format('truetype');
+  src: url('../assets/assets/fonts/Yoruka.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Bruce';
-  src: url('/src/assets/fonts/Bruce.ttf') format('truetype');
+  src: url('../assets/assets/fonts/Bruce.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

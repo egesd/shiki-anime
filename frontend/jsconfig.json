@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
+    "module": "ESNext",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "checkJs": true,
+    "baseUrl": ".", // Ensure the base URL is set to the root of your project
+    "paths": {
+      "@/*": ["src/*"] // Adjust this if you are using module aliases
+    }
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "src/**/*.ts", // Include TypeScript files if you have any
+    "src/**/*.tsx" // Include TSX files if you have any
+  ]
+}

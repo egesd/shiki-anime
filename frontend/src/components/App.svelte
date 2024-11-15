@@ -15,7 +15,7 @@
     faCalendarAlt,
     faFilter,
   } from '@fortawesome/free-solid-svg-icons';
-  import { genreIcons } from './genreIcons';
+  import { genreIcons } from '../config/genreIcons';
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
 
