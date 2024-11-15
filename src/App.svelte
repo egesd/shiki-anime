@@ -19,8 +19,16 @@
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
 
-  let season = 'spring';
-  let year = 2023;
+  function getCurrentSeason() {
+    const month = new Date().getMonth();
+    if (month >= 0 && month <= 2) return 'winter';
+    if (month >= 3 && month <= 5) return 'spring';
+    if (month >= 6 && month <= 8) return 'summer';
+    return 'fall';
+  }
+
+  let season = getCurrentSeason();
+  let year = new Date().getFullYear();
   let mediaFilter = 'tv';
   let searchQuery = '';
   let hoverAnime = null;
@@ -181,13 +189,6 @@
             class="relative bg-secondary rounded-lg overflow-hidden shadow-lg flex flex-col text-primary"
             on:mouseenter={() => handleMouseEnter(anime)}
             on:mouseleave={handleMouseLeave}
-            on:focus={() => handleMouseEnter(anime)}
-            on:blur={handleMouseLeave}
-            on:keydown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                handleMouseEnter(anime);
-              }
-            }}
           >
             <!-- Image wrapper with fixed aspect ratio -->
             <div class="relative w-full" style="padding-bottom: 150%;">
@@ -209,8 +210,7 @@
               {/if}
             </div>
 
-            <!-- Title and Score Section -->
-            <!-- Title Section with Truncation -->
+            <!-- Title Section -->
             <div class="p-3 h-20 flex items-center justify-center">
               <h2
                 class="text-md font-semibold text-white font-bruce text-center"
@@ -227,7 +227,17 @@
             <div
               class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center gap-2"
             >
-              <h2 class="text-xl font-bold mb-2 font-bruce">
+              <!-- Score in top-right corner of modal -->
+              {#if anime.node.mean !== undefined}
+                <p
+                  class="absolute top-2 right-2 bg-accent1 text-white text-sm px-2 py-1 rounded flex items-center"
+                >
+                  <FontAwesomeIcon icon={faStar} class="mr-1" />
+                  {anime.node.mean.toFixed(1)}
+                </p>
+              {/if}
+
+              <h2 class="text-xl font-bold mb-2 font-bruce text-center">
                 {anime.node.title}
               </h2>
               <p>
@@ -249,23 +259,21 @@
                       <span>{genre.name}</span>
                     </div>
                   {/each}
-                  <!-- Broadcast Data -->
                 </div>
               </div>
               {#if anime.node.broadcast}
                 <div class="mt-2 flex flex-col items-center text-center">
                   <strong>Broadcast:</strong>
                   <p class="mt-1">
-                    <span class="capitalize"
-                      >{anime.node.broadcast.day_of_the_week || 'Unknown'}</span
-                    >
-                    at
-                    {anime.node.broadcast.start_time || 'Unknown'}
+                    <span class="capitalize">
+                      {anime.node.broadcast.day_of_the_week || 'Unknown'}
+                    </span>
+                    at {anime.node.broadcast.start_time || 'Unknown'}
                   </p>
                 </div>
               {/if}
             </div>
-            <!-- {/if} -->
+            <!--  {/if} -->
           </div>
         {/each}
       </div>
