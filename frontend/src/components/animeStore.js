@@ -6,7 +6,7 @@ export const loading = writable(false);
 export const error = writable(null);
 let offset = 0; // Track the current offset
 let noMoreData = false; // Flag to indicate when no more data is available
-const API_URL = import.meta.env.VITE_API_URL || '/api'; // Default to relative path for API
+const API_URL = import.meta.env.VITE_API_URL || ''; // Default to relative path for API
 
 
 export async function fetchAnimeData(season, year, reset = false) {

@@ -8,9 +8,24 @@ dotenv.config(); // Load environment variables
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Allow requests from the frontend
-}));
+const allowedOrigins = [
+  'http://localhost:5173', // Local development
+  'https://anime-viewer-eta.vercel.app' // production URL
+];
+
+
+// Enable CORS dynamically based on origin
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  })
+);
 
 app.get('/api/anime/:year/:season', async (req, res) => {
   const { year, season } = req.params;
