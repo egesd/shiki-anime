@@ -78,6 +78,11 @@ app.get('/api/anime/:year/:season', async (req, res) => {
   }
 });
 
+app.use((req, res) => {
+  console.log(`Fallback route hit: ${req.originalUrl}`);
+  res.status(404).json({ error: 'NOT_FOUND', route: req.originalUrl });
+});
+
 // Export the Express app as a serverless function for Vercel
 export default app;
 
