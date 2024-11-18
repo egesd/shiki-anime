@@ -4,7 +4,7 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/dist" }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "api/index.js",
@@ -18,11 +18,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/dist/$1"
+      "dest": "dist/$1"
     }
   ],
   "env": {
-    "VITE_MYANIMELIST_API_KEY": "@vite_myanimelist_api_key",
-    "VITE_API_URL": "http://localhost:5000"
+    "VITE_API_URL": "https://anime-viewer-1mfa9cygx-eges-projects-abe580ea.vercel.app/api/"
   }
 }
