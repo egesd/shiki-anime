@@ -1,8 +1,17 @@
 [build]
-publish = "frontend/dist" # Path to the frontend output directory
-command = "npm run build" # Build command
+  publish = "frontend/dist"       # Path to the frontend build output directory
+  command = "npm run build"       # Build command for the frontend
+
+[functions]
+  directory = "netlify/functions" # Path to your backend functions
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/api/*"
+  to = "/.netlify/functions/index"
+  status = 200
+  force = true                    # Ensures API requests bypass static routing
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

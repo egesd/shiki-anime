@@ -1,15 +1,15 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import axios from 'axios';
-import cors from 'cors';
-
-dotenv.config(); // Load environment variables
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
+const serverless = require('serverless-http');
+require('dotenv').config({ path: './netlify/functions/.env' });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   'http://localhost:5173', // Local development
+  '673c790a7e49791ac6a10184--anime-viewer-app.netlify.app', // Production
 ];
 
 console.log('Loaded API Key:', process.env.VITE_MYANIMELIST_API_KEY);
@@ -99,8 +99,9 @@ app.use((req, res) => {
   res.status(404).json({ error: 'NOT_FOUND', route: req.originalUrl });
 });
 
-// Export the Express app as a serverless function for Vercel
-export default app;
+module.exports = {
+  handler: serverless(app),
+};
 
 // Start the server locally if not in a serverless environment
 if (process.env.NODE_ENV !== 'production') {

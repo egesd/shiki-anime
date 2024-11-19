@@ -7,7 +7,7 @@ export const error = writable(null);
 let offset = 0; // Track the current offset
 let noMoreData = false; // Flag to indicate when no more data is available
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
-
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
 
 export async function fetchAnimeData(season, year, reset = false) {
   loading.set(true);
