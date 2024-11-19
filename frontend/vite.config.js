@@ -6,6 +6,7 @@ export default defineConfig({
   build: {
     outDir: 'dist', // Ensure this matches "distDir" in vercel.json
     assetsDir: 'assets', // Default assets directory
+    sourcemap: true
   },
   base: './', // Use relative paths for assets
 });

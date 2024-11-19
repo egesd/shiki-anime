@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   'http://localhost:5173', // Local development
-  'https://anime-viewer-eta.vercel.app' // production URL
 ];
 
+console.log('Loaded API Key:', process.env.VITE_MYANIMELIST_API_KEY);
 
 // Enable CORS dynamically based on origin
 app.use(
@@ -23,16 +23,24 @@ app.use(
       } else {
         callback(new Error('Not allowed by CORS'));
       }
-    }
+    },
   })
 );
 
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 app.get('/api/anime/:year/:season', async (req, res) => {
+  console.log('Route defined: /api/anime/:year/:season');
   const { year, season } = req.params;
   const limit = parseInt(req.query.limit) || 100;
   const offset = parseInt(req.query.offset) || 0; // Use offset from frontend
 
-  console.log(`Fetching data for season: ${season}, year: ${year}, offset: ${offset}, limit: ${limit}`);
+  console.log(
+    `Fetching data for season: ${season}, year: ${year}, offset: ${offset}, limit: ${limit}`
+  );
 
   try {
     const response = await axios.get(
@@ -44,13 +52,18 @@ app.get('/api/anime/:year/:season', async (req, res) => {
         params: {
           limit,
           offset,
-          fields: 'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast',
+          fields:
+            'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast',
         },
       }
     );
 
     // Check if API returned any data; if not, stop further requests
-    if (!response.data || !response.data.data || response.data.data.length === 0) {
+    if (
+      !response.data ||
+      !response.data.data ||
+      response.data.data.length === 0
+    ) {
       console.log('No more data available from the API');
       return res.json([]); // Return an empty array to signify no more data
     }
@@ -70,7 +83,10 @@ app.get('/api/anime/:year/:season', async (req, res) => {
 
     res.json(uniqueData);
   } catch (error) {
-    console.error('Error fetching data from MyAnimeList:', error.response?.data || error.message);
+    console.error(
+      'Error fetching data from MyAnimeList:',
+      error.response?.data || error.message
+    );
     res.status(500).json({
       error: 'Error fetching data from MyAnimeList',
       details: error.response?.data || error.message,
