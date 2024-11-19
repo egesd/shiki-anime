@@ -25,3 +25,4 @@ vercel.json
 *.sln
 *.sw?
 .vercel
+netlify/functions/.env
