@@ -5,11 +5,12 @@ const serverless = require('serverless-http');
 require('dotenv').config({ path: './netlify/functions/.env' });
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
+  'http://localhost:5000', // Local development
   'http://localhost:5173', // Local development
-  '673c790a7e49791ac6a10184--anime-viewer-app.netlify.app', // Production
+  'http://localhost:8888', // Netlify Dev
+  'https://anime-viewer-app.netlify.app', // Production
 ];
 
 console.log('Loaded API Key:', process.env.VITE_MYANIMELIST_API_KEY);
@@ -103,8 +104,9 @@ module.exports = {
   handler: serverless(app),
 };
 
-// Start the server locally if not in a serverless environment
+// Start the server locally only in development
 if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
