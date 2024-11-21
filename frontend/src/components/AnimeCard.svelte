@@ -29,18 +29,20 @@
 >
   <!-- Main Card Content -->
   <div class="relative w-full" style="padding-bottom: 150%;">
-    <img
-      src={anime.node.main_picture.large || anime.node.main_picture.medium}
-      alt={anime.node.title}
-      class="absolute top-0 left-0 w-full h-full object-cover"
-      loading="lazy"
-    />
-    {#if anime.node.mean !== undefined}
+    {#if anime?.main_picture}
+      <img
+        src={anime.main_picture.large || anime.main_picture.medium}
+        alt={anime.title}
+        class="absolute top-0 left-0 w-full h-full object-cover"
+        loading="lazy"
+      />
+    {/if}
+    {#if anime?.mean !== undefined}
       <p
         class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-white text-sm px-2 py-1 rounded"
       >
         <FontAwesomeIcon icon={faStar} class="mr-1" />
-        {anime.node.mean.toFixed(1)}
+        {anime.mean.toFixed(1)}
       </p>
     {/if}
   </div>
@@ -48,11 +50,11 @@
   <div class="p-3 h-20 flex items-center justify-center">
     <h2
       class="text-md font-semibold text-white font-bruce text-center"
-      title={anime.node.title}
+      title={anime?.title}
     >
-      {anime.node.title.length > 35
-        ? anime.node.title.slice(0, 35) + '...'
-        : anime.node.title}
+      {anime?.title?.length > 35
+        ? anime.title.slice(0, 35) + '...'
+        : anime.title}
     </h2>
   </div>
 
@@ -61,27 +63,27 @@
     <div
       class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center gap-2"
     >
-      {#if anime.node.mean !== undefined}
+      {#if anime?.mean !== undefined}
         <p
           class="absolute top-2 right-2 bg-accent1 text-white text-sm px-2 py-1 rounded flex items-center"
         >
           <FontAwesomeIcon icon={faStar} class="mr-1" />
-          {anime.node.mean.toFixed(1)}
+          {anime.mean.toFixed(1)}
         </p>
       {/if}
 
       <h2 class="text-xl font-bold mb-2 font-bruce text-center">
-        {anime.node.title}
+        {anime?.title}
       </h2>
-      <p><strong>Episodes:</strong> {anime.node.num_episodes || 'N/A'}</p>
+      <p><strong>Episodes:</strong> {anime?.num_episodes || 'N/A'}</p>
       <p>
         <strong>Studio:</strong>
-        {anime.node.studios?.[0]?.name || 'Unknown'}
+        {anime?.studios?.[0]?.name || 'Unknown'}
       </p>
       <div>
         <strong>Genres:</strong>
         <div class="flex gap-2 mt-1 flex-wrap justify-center">
-          {#each anime.node.genres as genre}
+          {#each anime?.genres as genre}
             <div class="flex items-center gap-1">
               {#if genreIcons[genre.name]}
                 <FontAwesomeIcon icon={genreIcons[genre.name]} />
@@ -91,14 +93,14 @@
           {/each}
         </div>
       </div>
-      {#if anime.node.broadcast}
+      {#if anime?.broadcast_day && anime?.broadcast_time}
         <div class="mt-2 flex flex-col items-center text-center">
           <strong>Broadcast:</strong>
           <p class="mt-1">
             <span class="capitalize">
-              {anime.node.broadcast.day_of_the_week || 'Unknown'}
+              {anime.broadcast_day || 'Unknown'}
             </span>
-            at {anime.node.broadcast.start_time || 'Unknown'}
+            at {anime.broadcast_time || 'Unknown'}
           </p>
         </div>
       {/if}

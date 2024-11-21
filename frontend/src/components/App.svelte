@@ -1,5 +1,5 @@
 <script>
-  import { animeData, loading, error, fetchAnimeData } from './animeStore.js';
+  import { animeData, loading, error, fetchAnimeDataFromSupabase } from './animeStore.js';
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
   import MediaFilter from './MediaFilter.svelte';
@@ -31,14 +31,19 @@
     };
   }
 
-  // Load initial anime data
-  fetchAnimeData(season, year, true);
+  // Load initial anime data from Supabase
+  fetchAnimeDataFromSupabase(season, year, true);
+
+  // Log the first element of animeData once it is available
+  $: if ($animeData.length > 0) {
+    console.log('First element of animeData:', $animeData[0]);
+  }
 
   // Filter anime based on type and search query
   $: filteredAnime = $animeData
-    .filter((anime) => anime.node.media_type === mediaFilter)
+    .filter((anime) => anime.media_type === mediaFilter)
     .filter((anime) =>
-      anime.node.title.toLowerCase().includes(searchQuery.toLowerCase())
+      anime.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   function handleMouseEnter(anime) {
@@ -56,7 +61,7 @@
       window.innerHeight + window.scrollY >=
       document.body.offsetHeight - 500
     ) {
-      fetchAnimeData(season, year);
+      fetchAnimeDataFromSupabase(season, year);
     }
   }
 
@@ -87,11 +92,11 @@
       {year}
       on:seasonChange={(e) => {
         season = e.detail;
-        fetchAnimeData(season, year, true);
+        fetchAnimeDataFromSupabase(season, year, true);
       }}
       on:yearChange={(e) => {
         year = parseInt(e.detail, 10);
-        fetchAnimeData(season, year, true);
+        fetchAnimeDataFromSupabase(season, year, true);
       }}
     />
 

@@ -1,17 +1,21 @@
 [build]
-  publish = "frontend/dist"       # Path to the frontend build output directory
-  command = "npm run build"       # Build command for the frontend
+  publish = "frontend/dist"
+  command = "npm run build"
 
 [functions]
-  directory = "netlify/functions" # Path to your backend functions
+  directory = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/index"
   status = 200
-  force = true                    # Ensures API requests bypass static routing
+  force = true
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[plugins]]
+  package = "@netlify/plugin-scheduled-functions"
+  config.schedule = "0 0 * * *" # Run every 24 hours

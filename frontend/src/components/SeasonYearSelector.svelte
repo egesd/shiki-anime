@@ -44,7 +44,7 @@
       on:change={handleYearChange}
       class="p-2 rounded bg-secondary text-white placeholder-white"
     >
-      {#each Array.from({ length: 25 }, (_, i) => new Date().getFullYear() - i) as option}
+      {#each Array.from({ length: 45 }, (_, i) => new Date().getFullYear() - i) as option}
         <option value={option}>{option}</option>
       {/each}
     </select>
