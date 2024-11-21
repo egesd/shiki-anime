@@ -23,7 +23,7 @@
     <p class="text-accent2 mr-2">Season:</p>
     {#each [{ name: 'winter', icon: faSnowflake }, { name: 'spring', icon: faSeedling }, { name: 'summer', icon: faSun }, { name: 'fall', icon: faLeaf }] as { name, icon }}
       <button
-        class="p-2 rounded-lg text-white transition-all w-full"
+        class="p-2 rounded-lg text-white transition-all  max-sm:w-full"
         class:bg-accent2={season === name}
         class:bg-secondary={season !== name}
         on:click={() => handleSeasonChange(name)}

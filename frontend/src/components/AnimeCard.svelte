@@ -7,7 +7,7 @@
   export let anime;
 
   const dispatch = createEventDispatcher();
-  let isHovered = false; // Track hover state
+  let isHovered = false; // Track hover or click state
 
   function handleMouseEnter() {
     isHovered = true;
@@ -18,14 +18,50 @@
     isHovered = false;
     dispatch('hoverLeave'); // Emit custom event without data
   }
+
+  function handleClick(event) {
+    // Prevent triggering click when double-tapping to hover on mobile
+    if (event.detail === 1) {
+      isHovered = true;
+      dispatch('hoverEnter', anime);
+    } else if (event.detail === 2) {
+      isHovered = false;
+      dispatch('hoverLeave');
+    }
+  }
+
+  // Close the hover modal when clicking outside on mobile
+  function handleOutsideClick(event) {
+    if (isHovered && !event.target.closest('.anime-card')) {
+      isHovered = false;
+      dispatch('hoverLeave');
+    }
+  }
+
+  // Add event listener for clicks outside the card
+  import { onMount, onDestroy } from 'svelte';
+
+  onMount(() => {
+    window.addEventListener('click', handleOutsideClick);
+  });
+
+  onDestroy(() => {
+    window.removeEventListener('click', handleOutsideClick);
+  });
 </script>
 
 <div
   role="button"
   tabindex="0"
-  class="relative bg-secondary rounded-lg overflow-hidden shadow-lg flex flex-col text-primary"
+  class="anime-card relative bg-secondary rounded-lg overflow-hidden shadow-lg flex flex-col text-primary"
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
+  on:click={handleClick}
+  on:keydown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleClick(e);
+    }
+  }}
 >
   <!-- Main Card Content -->
   <div class="relative w-full" style="padding-bottom: 150%;">
@@ -58,7 +94,7 @@
     </h2>
   </div>
 
-  <!-- Hover Modal for Additional Details -->
+  <!-- Hover/Click Modal for Additional Details -->
   {#if isHovered}
     <div
       class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center gap-2"
@@ -107,3 +143,10 @@
     </div>
   {/if}
 </div>
+
+<style>
+  /* Optional: Add cursor pointer for better UX on desktop */
+  .anime-card {
+    cursor: pointer;
+  }
+</style>
