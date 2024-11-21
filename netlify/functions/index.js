@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const serverless = require('serverless-http');
-require('dotenv').config({ path: './netlify/functions/.env' });
+require('dotenv').config();
 
 const app = express();
 
@@ -13,7 +13,6 @@ const allowedOrigins = [
   'https://anime-viewer-app.netlify.app', // Production
 ];
 
-console.log('Loaded API Key:', process.env.VITE_MYANIMELIST_API_KEY);
 
 // Enable CORS dynamically based on origin
 app.use(
