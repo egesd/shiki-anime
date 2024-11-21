@@ -1,6 +1,6 @@
 <script>
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faSnowflake, faSeedling, faSun, faLeaf, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+  import { faSnowflake, faSeedling, faSun, faLeaf, faCalendarAlt, faInfinity } from '@fortawesome/free-solid-svg-icons';
   import { createEventDispatcher } from 'svelte';
 
   export let season;
@@ -13,7 +13,7 @@
   }
 
   function handleYearChange(event) {
-    const selectedYear = event.target.value; // Direct access without type casting
+    const selectedYear = event.target.value;
     dispatch('yearChange', selectedYear); // Emit a custom event for year
   }
 </script>
@@ -21,9 +21,20 @@
 <div class="mb-4 flex sm:flex-row flex-col items-center justify-center gap-4">
   <div class="flex sm:flex-row flex-col gap-2 items-center max-sm:w-full">
     <p class="text-accent2 mr-2">Season:</p>
+    <!-- All Seasons Button -->
+    <button
+      class="p-2 rounded-lg text-white transition-all max-sm:w-full"
+      class:bg-accent2={season === 'all'}
+      class:bg-secondary={season !== 'all'}
+      on:click={() => handleSeasonChange('all')}
+    >
+      <FontAwesomeIcon icon={faInfinity} class="mr-1" />
+      All
+    </button>
+
     {#each [{ name: 'winter', icon: faSnowflake }, { name: 'spring', icon: faSeedling }, { name: 'summer', icon: faSun }, { name: 'fall', icon: faLeaf }] as { name, icon }}
       <button
-        class="p-2 rounded-lg text-white transition-all  max-sm:w-full"
+        class="p-2 rounded-lg text-white transition-all max-sm:w-full"
         class:bg-accent2={season === name}
         class:bg-secondary={season !== name}
         on:click={() => handleSeasonChange(name)}

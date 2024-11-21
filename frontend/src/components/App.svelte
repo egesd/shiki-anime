@@ -41,7 +41,7 @@
 
   // Filter anime based on type and search query
   $: filteredAnime = $animeData
-    .filter((anime) => anime.media_type === mediaFilter)
+    .filter((anime) => mediaFilter === 'all' || anime.media_type === mediaFilter)
     .filter((anime) =>
       anime.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -114,9 +114,7 @@
 
     <!-- Display Anime Cards -->
     {#if filteredAnime && filteredAnime.length}
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each filteredAnime as anime}
           <SlideIn distance={30} duration={500}>
             <AnimeCard
@@ -128,14 +126,11 @@
         {/each}
       </div>
     {:else if !$loading && !filteredAnime.length}
-      <h2 class="text-center text-accent2">No anime found.</h2>
+      <p class="text-center text-accent1">No anime found for the selected criteria.</p>
     {/if}
 
-    <!-- Infinite Scroll Loading Indicator -->
-    {#if $loading && $animeData.length}
-      <div class="flex justify-center mt-4">
-        <InfiniteScrollIndicator />
-      </div>
+    {#if $loading}
+      <InfiniteScrollIndicator />
     {/if}
   </div>
 </main>

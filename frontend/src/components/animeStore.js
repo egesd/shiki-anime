@@ -15,11 +15,13 @@ export async function fetchAnimeDataFromSupabase(season, year, reset = false) {
   }
 
   try {
-    const { data, error } = await supabase
-      .from('anime')
-      .select('*')
-      .eq('season', season)
-      .eq('year', year)
+    let query = supabase.from('anime').select('*').eq('year', year);
+
+    if (season !== 'all') {
+      query = query.eq('season', season);
+    }
+
+    const { data, error } = await query
       .order('mean', { ascending: false });
 
     if (error) throw error;
