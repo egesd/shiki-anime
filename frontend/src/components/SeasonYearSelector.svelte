@@ -18,12 +18,12 @@
   }
 </script>
 
-<div class="mb-4 flex items-center justify-center gap-4">
-  <div class="flex gap-2 items-center">
+<div class="mb-4 flex sm:flex-row flex-col items-center justify-center gap-4">
+  <div class="flex sm:flex-row flex-col gap-2 items-center max-sm:w-full">
     <p class="text-accent2 mr-2">Season:</p>
     {#each [{ name: 'winter', icon: faSnowflake }, { name: 'spring', icon: faSeedling }, { name: 'summer', icon: faSun }, { name: 'fall', icon: faLeaf }] as { name, icon }}
       <button
-        class="p-2 rounded-lg text-white transition-all"
+        class="p-2 rounded-lg text-white transition-all w-full"
         class:bg-accent2={season === name}
         class:bg-secondary={season !== name}
         on:click={() => handleSeasonChange(name)}
