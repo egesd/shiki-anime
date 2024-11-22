@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import Button from './Button.svelte'; // Adjust the path if necessary
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faTv, faFilm } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,22 +13,21 @@
   }
 </script>
 
+
 <div class="mb-4 flex items-center justify-center gap-4">
-  <button
-    class="p-2 rounded-lg text-white text-xl transition-all"
-    class:bg-accent2={mediaFilter === 'tv'}
-    class:bg-secondary={mediaFilter !== 'tv'}
+  <Button
+    variant={mediaFilter === 'tv' ? 'secondary' : 'primary'}
     on:click={() => handleFilterChange('tv')}
+    className="text-xl"
   >
     <FontAwesomeIcon icon={faTv} class="mr-2" /> Series
-  </button>
+  </Button>
 
-  <button
-    class="p-2 rounded-lg text-white text-xl transition-all"
-    class:bg-accent2={mediaFilter === 'movie'}
-    class:bg-secondary={mediaFilter !== 'movie'}
+  <Button
+    variant={mediaFilter === 'movie' ? 'secondary' : 'primary'}
     on:click={() => handleFilterChange('movie')}
+    className="text-xl"
   >
     <FontAwesomeIcon icon={faFilm} class="mr-2" /> Movies
-  </button>
+  </Button>
 </div>
