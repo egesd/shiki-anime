@@ -18,19 +18,15 @@
   }
 </script>
 
-<!--
-  Apply Tailwind CSS classes based on props.
-  Use `$$restProps` to pass any additional attributes to the button element.
--->
 <button
   type="button"
   disabled={disabled}
   class={`
-    px-4 py-2 rounded-lg font-semibold transition-transform transition-colors duration-200 focus:outline-none
+    px-4 py-2 rounded-lg font-semibold transition-transform transition-colors duration-200
     ${
       variant === 'primary'
-        ? 'bg-secondary text-white hover:bg-accent1'
-        : 'bg-accent1 text-white hover:bg-accent2'
+        ? 'bg-secondary text-white hover:bg-accent1 focus:ring-2 focus:ring-accent2 focus:ring-offset-2'
+        : 'bg-accent1 text-white hover:bg-accent2 focus:ring-2 focus:ring-secondary focus:ring-offset-2'
     }
     ${fullWidth ? 'w-full' : ''}
     ${className}

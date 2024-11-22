@@ -59,7 +59,7 @@
     {/each}
   </div>
 
-  <div class="flex gap-2 items-center">
+  <div class="flex gap-2 items-center sm:flex-row flex-col">
     <label for="year" class="text-accent2 mr-1 flex items-center">
       <FontAwesomeIcon icon={faCalendarAlt} class="mr-1 mb-[2px]" /> Year:
     </label>
