@@ -14,7 +14,7 @@
 </script>
 
 
-<div class="mb-4 flex items-center justify-center gap-4">
+<div class="flex items-center justify-center gap-4">
   <Button
     variant={mediaFilter === 'tv' ? 'secondary' : 'primary'}
     on:click={() => handleFilterChange('tv')}

@@ -5,7 +5,7 @@
   export let searchQuery;
 </script>
 
-<div class="mb-4 flex items-center justify-center gap-4 sm:flex-row flex-col">
+<div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
   <label for="search" class="text-accent2">
     <FontAwesomeIcon icon={faSearch} class="mr-1" /> Search:
   </label>

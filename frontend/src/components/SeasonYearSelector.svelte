@@ -27,7 +27,7 @@
   }
 </script>
 
-<div class="mb-4 flex sm:flex-row flex-col items-center justify-center gap-4">
+<div class="flex sm:flex-row flex-col items-center justify-center gap-4">
   <div class="flex sm:flex-row flex-col gap-2 items-center max-sm:w-full">
     <p class="text-accent2 mr-2 flex items-center">
       <FontAwesomeIcon icon={faGlobe} class="mr-1" />
