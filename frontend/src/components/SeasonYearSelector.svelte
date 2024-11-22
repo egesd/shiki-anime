@@ -8,6 +8,7 @@
     faLeaf,
     faCalendarAlt,
     faInfinity,
+    faGlobe,
   } from '@fortawesome/free-solid-svg-icons';
   import { createEventDispatcher } from 'svelte';
 
@@ -28,8 +29,10 @@
 
 <div class="mb-4 flex sm:flex-row flex-col items-center justify-center gap-4">
   <div class="flex sm:flex-row flex-col gap-2 items-center max-sm:w-full">
-    <p class="text-accent2 mr-2">Season:</p>
-
+    <p class="text-accent2 mr-2 flex items-center">
+      <FontAwesomeIcon icon={faGlobe} class="mr-1" />
+      Season:
+    </p>
     <!-- All Seasons Button -->
     <Button
       variant={season === 'all' ? 'secondary' : 'primary'}
@@ -58,7 +61,7 @@
 
   <div class="flex gap-2 items-center">
     <label for="year" class="text-accent2 mr-1 flex items-center">
-      <FontAwesomeIcon icon={faCalendarAlt} class="mr-1" /> Year:
+      <FontAwesomeIcon icon={faCalendarAlt} class="mr-1 mb-[2px]" /> Year:
     </label>
     <select
       id="year"
