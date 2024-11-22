@@ -7,13 +7,11 @@
   } from './animeStore.js';
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
-  import MediaFilter from './MediaFilter.svelte';
-  import SearchBar from './SearchBar.svelte';
-  import SeasonYearSelector from './SeasonYearSelector.svelte';
   import AnimeCard from './AnimeCard.svelte';
   import InfiniteScrollIndicator from './InfiniteScrollIndicator.svelte';
   import SlideIn from './SlideIn.svelte';
   import Search from './Search.svelte';
+  import ScrollTopButton from './ScrollTopButton.svelte';
 
   function getCurrentSeason() {
     const month = new Date().getMonth();
@@ -141,3 +139,5 @@
     {/if}
   </div>
 </main>
+
+<ScrollTopButton />
