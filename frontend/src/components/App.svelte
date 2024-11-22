@@ -1,5 +1,10 @@
 <script>
-  import { animeData, loading, error, fetchAnimeDataFromSupabase } from './animeStore.js';
+  import {
+    animeData,
+    loading,
+    error,
+    fetchAnimeDataFromSupabase,
+  } from './animeStore.js';
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
   import MediaFilter from './MediaFilter.svelte';
@@ -8,6 +13,7 @@
   import AnimeCard from './AnimeCard.svelte';
   import InfiniteScrollIndicator from './InfiniteScrollIndicator.svelte';
   import SlideIn from './SlideIn.svelte';
+  import Search from './Search.svelte';
 
   function getCurrentSeason() {
     const month = new Date().getMonth();
@@ -41,7 +47,9 @@
 
   // Filter anime based on type and search query
   $: filteredAnime = $animeData
-    .filter((anime) => mediaFilter === 'all' || anime.media_type === mediaFilter)
+    .filter(
+      (anime) => mediaFilter === 'all' || anime.media_type === mediaFilter
+    )
     .filter((anime) =>
       anime.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -78,18 +86,13 @@
 <main class="p-4 bg-primary min-h-screen text-secondary flex justify-center">
   <div class="w-full max-w-screen-xl">
     <!-- Media Filter -->
-    <MediaFilter
+    <Search
       {mediaFilter}
-      on:filterChange={(e) => (mediaFilter = e.detail)}
-    />
-
-    <!-- Search Bar -->
-    <SearchBar bind:searchQuery />
-
-    <!-- Season and Year Selector -->
-    <SeasonYearSelector
+      {searchQuery}
       {season}
       {year}
+      on:filterChange={(e) => (mediaFilter = e.detail)}
+      on:searchQueryChange={(e) => (searchQuery = e.detail)}
       on:seasonChange={(e) => {
         season = e.detail;
         fetchAnimeDataFromSupabase(season, year, true);
@@ -114,7 +117,9 @@
 
     <!-- Display Anime Cards -->
     {#if filteredAnime && filteredAnime.length}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+      >
         {#each filteredAnime as anime}
           <SlideIn distance={30} duration={500}>
             <AnimeCard
@@ -126,7 +131,9 @@
         {/each}
       </div>
     {:else if !$loading && !filteredAnime.length}
-      <p class="text-center text-accent1">No anime found for the selected criteria.</p>
+      <p class="text-center text-accent1">
+        No anime found for the selected criteria.
+      </p>
     {/if}
 
     {#if $loading}
