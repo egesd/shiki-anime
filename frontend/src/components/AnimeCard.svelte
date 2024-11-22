@@ -53,7 +53,7 @@
 <div
   role="button"
   tabindex="0"
-  class="anime-card relative bg-secondary rounded-lg overflow-hidden shadow-lg flex flex-col text-primary"
+  class="anime-card relative bg-secondary rounded-lg overflow-hidden flex flex-col text-primary"
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
   on:click={handleClick}

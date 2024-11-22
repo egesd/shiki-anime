@@ -31,7 +31,7 @@
   }
 </script>
 
-<search class="md:sticky md:top-0 bg-primary p-4 z-10">
+<search class="md:sticky md:top-0 bg-primary p-4 z-10 shadow-none border-none">
   <div class="flex flex-col sm:items-center sm:justify-between">
     <!-- Media Filter -->
     <MediaFilter
