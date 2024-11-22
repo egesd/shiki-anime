@@ -53,7 +53,7 @@
 <div
   role="button"
   tabindex="0"
-  class="anime-card relative bg-secondary rounded-lg overflow-hidden flex flex-col text-primary"
+  class="cursor-pointer relative bg-secondary rounded-lg overflow-hidden flex flex-col text-primary"
   on:mouseenter={handleMouseEnter}
   on:mouseleave={handleMouseLeave}
   on:click={handleClick}
@@ -143,10 +143,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  /* Optional: Add cursor pointer for better UX on desktop */
-  .anime-card {
-    cursor: pointer;
-  }
-</style>
