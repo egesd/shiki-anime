@@ -14,6 +14,7 @@
 
   export let season;
   export let year;
+  export let isPinned = false; // Add isPinned prop with default value
 
   const dispatch = createEventDispatcher();
 
@@ -29,10 +30,12 @@
 
 <div class="flex sm:flex-row flex-col items-center justify-center gap-4">
   <div class="flex sm:flex-row flex-col gap-2 items-center max-sm:w-full">
-    <p class="text-accent2 mr-2 flex items-center">
-      <FontAwesomeIcon icon={faGlobe} class="mr-1" />
-      Season:
-    </p>
+    {#if !isPinned}
+      <p class="text-accent2 mr-2 flex items-center">
+        <FontAwesomeIcon icon={faGlobe} class="mr-1" />
+        Season:
+      </p>
+    {/if}
     <!-- All Seasons Button -->
     <Button
       variant={season === 'all' ? 'secondary' : 'primary'}
@@ -60,9 +63,11 @@
   </div>
 
   <div class="flex gap-2 items-center sm:flex-row flex-col">
-    <label for="year" class="text-accent2 mr-1 flex items-center">
-      <FontAwesomeIcon icon={faCalendarAlt} class="mr-1 mb-[2px]" /> Year:
-    </label>
+    {#if !isPinned}
+      <label for="year" class="text-accent2 mr-1 flex items-center">
+        <FontAwesomeIcon icon={faCalendarAlt} class="mr-1 mb-[2px]" /> Year:
+      </label>
+    {/if}
     <select
       id="year"
       bind:value={year}

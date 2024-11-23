@@ -67,6 +67,7 @@
   const debouncedHandleScroll = debounce(handleScroll, 200);
 
   onMount(() => {
+    fetchAnimeDataFromSupabase(season, year);
     window.addEventListener('scroll', debouncedHandleScroll);
     return () => window.removeEventListener('scroll', debouncedHandleScroll);
   });
@@ -129,7 +130,7 @@
 
     <!-- Optionally, indicate no more data -->
     {#if !$hasMoreData && $animeData.length > 0}
-      <p class="text-center text-accent1 mt-4">No more anime to load.</p>
+      <p class="text-center text-xl mt-4 text-black">No more anime to load.</p>
     {/if}
   </div>
 </main>
