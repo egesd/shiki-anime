@@ -4,6 +4,7 @@
     loading,
     error,
     fetchAnimeDataFromSupabase,
+    hasMoreData, // Import the new store
   } from './animeStore.js';
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
@@ -35,14 +36,6 @@
     };
   }
 
-  // Load initial anime data from Supabase
-  fetchAnimeDataFromSupabase(season, year, true);
-
-  // Log the first element of animeData once it is available
-  $: if ($animeData.length > 0) {
-    console.log('First element of animeData:', $animeData[0]);
-  }
-
   // Filter anime based on type and search query
   $: filteredAnime = $animeData
     .filter(
@@ -60,9 +53,9 @@
     hoverAnime = null;
   }
 
-  // Infinite scroll handler with loading check
+  // Infinite scroll handler with loading and hasMoreData check
   function handleScroll() {
-    if ($loading) return; // Stop if data is already loading
+    if ($loading || !$hasMoreData) return; // Stop if loading or no more data
     if (
       window.innerHeight + window.scrollY >=
       document.body.offsetHeight - 500
@@ -93,10 +86,12 @@
       on:searchQueryChange={(e) => (searchQuery = e.detail)}
       on:seasonChange={(e) => {
         season = e.detail;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         fetchAnimeDataFromSupabase(season, year, true);
       }}
       on:yearChange={(e) => {
         year = parseInt(e.detail, 10);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         fetchAnimeDataFromSupabase(season, year, true);
       }}
     />
@@ -115,9 +110,7 @@
 
     <!-- Display Anime Cards -->
     {#if filteredAnime && filteredAnime.length}
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each filteredAnime as anime}
           <SlideIn distance={30} duration={500}>
             <AnimeCard
@@ -134,8 +127,9 @@
       </p>
     {/if}
 
-    {#if $loading}
-      <InfiniteScrollIndicator />
+    <!-- Optionally, indicate no more data -->
+    {#if !$hasMoreData && $animeData.length > 0}
+      <p class="text-center text-accent1 mt-4">No more anime to load.</p>
     {/if}
   </div>
 </main>
