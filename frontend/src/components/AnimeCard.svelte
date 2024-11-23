@@ -3,6 +3,7 @@
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faStar } from '@fortawesome/free-solid-svg-icons';
   import { genreIcons } from '../config/genreIcons';
+  import { convertJSTToFinnish } from '../utils/timezone';
 
   export let anime;
 
@@ -17,6 +18,16 @@
   function handleMouseLeave() {
     isHovered = false;
     dispatch('hoverLeave'); // Emit custom event without data
+  }
+
+  // Convert broadcast time to Finnish time
+  let convertedBroadcast = { day: 'Unknown', time: 'Unknown' };
+
+  if (anime.broadcast_day && anime.broadcast_time) {
+    convertedBroadcast = convertJSTToFinnish(
+      anime.broadcast_day,
+      anime.broadcast_time
+    );
   }
 </script>
 
@@ -93,16 +104,18 @@
           {/each}
         </div>
       </div>
-      {#if anime?.broadcast_day && anime?.broadcast_time}
+      {#if convertedBroadcast.day !== 'Unknown' && convertedBroadcast.time !== 'Unknown'}
         <div class="mt-2 flex flex-col items-center text-center">
           <strong>Broadcast:</strong>
           <p class="mt-1">
             <span class="capitalize">
-              {anime.broadcast_day || 'Unknown'}
+              {convertedBroadcast.day}
             </span>
-            at {anime.broadcast_time || 'Unknown'}
+            at {convertedBroadcast.time}
           </p>
         </div>
+      {:else}
+        <p class="mt-2 text-center">Broadcast information not available.</p>
       {/if}
     </div>
   {/if}
