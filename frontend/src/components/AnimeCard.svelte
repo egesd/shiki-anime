@@ -50,7 +50,7 @@
     {/if}
     {#if anime?.mean !== undefined}
       <p
-        class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-white text-sm px-2 py-1 rounded"
+        class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-white text-sm px-2 py-1 rounded md:text-base text-2xl"
       >
         <FontAwesomeIcon icon={faStar} class="mr-1" />
         {anime.mean.toFixed(1)}
@@ -72,18 +72,18 @@
   <!-- Hover Modal for Additional Details -->
   {#if isHovered}
     <div
-      class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center gap-2"
+      class="absolute inset-0 bg-secondary bg-opacity-100  p-4 rounded-lg text-white z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-sm"
     >
       {#if anime?.mean !== undefined}
         <p
-          class="absolute top-2 right-2 bg-accent1 text-white text-sm px-2 py-1 rounded flex items-center"
+          class="absolute top-2 right-2 bg-accent1 text-white text-sm px-2 py-1 rounded flex items-center md:text-base text-2xl"
         >
-          <FontAwesomeIcon icon={faStar} class="mr-1" />
+          <FontAwesomeIcon icon={faStar} class="mr-2" />
           {anime.mean.toFixed(1)}
         </p>
       {/if}
 
-      <h2 class="text-xl font-bold mb-2 font-bruce text-center">
+      <h2 class="text-3xl md:text-xl font-bold mb-2 font-bruce text-center">
         {anime?.title}
       </h2>
       <p><strong>Episodes:</strong> {anime?.num_episodes || 'N/A'}</p>
@@ -95,7 +95,7 @@
         <strong>Genres:</strong>
         <div class="flex gap-2 mt-1 flex-wrap justify-center">
           {#each anime?.genres as genre}
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-2">
               {#if genreIcons[genre.name]}
                 <FontAwesomeIcon icon={genreIcons[genre.name]} />
               {/if}
