@@ -26,7 +26,7 @@
         href="https://myanimelist.net/"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-accent1 transition-colors duration-200"
+        class="hover:text-accent1 transition-colors duration-200 text-gray"
       >
         MyAnimeList
       </a>
@@ -34,7 +34,7 @@
         href="https://github.com/egesd/anime-viewer"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-accent1 transition-colors duration-200"
+        class="hover:text-accent1 transition-colors duration-200 text-gray"
       >
         GitHub
       </a>

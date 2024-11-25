@@ -14,6 +14,6 @@
     type="text"
     placeholder="Search anime by title..."
     bind:value={searchQuery}
-    class="p-2 rounded bg-secondary text-white placeholder-white w-64"
+    class="p-2 rounded bg-secondary text-gray placeholder-gray w-64"
   />
 </div>

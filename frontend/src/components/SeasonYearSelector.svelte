@@ -72,7 +72,7 @@
       id="year"
       bind:value={year}
       on:change={handleYearChange}
-      class="p-2 rounded bg-secondary text-white focus:ring-2 focus:ring-accent2 focus:ring-offset-2"
+      class="p-2 rounded bg-secondary text-gray focus:ring-2 focus:ring-accent2 focus:ring-offset-2"
       aria-label="Select year"
     >
       {#each Array.from({ length: 45 }, (_, i) => new Date().getFullYear() - i) as option}
