@@ -4,7 +4,7 @@
     loading,
     error,
     fetchAnimeDataFromSupabase,
-    hasMoreData, // Import the new store
+    hasMoreData,
   } from './animeStore.js';
   import { onMount } from 'svelte';
   import Header from './Header.svelte';
@@ -24,7 +24,7 @@
 
   let season = getCurrentSeason();
   let year = new Date().getFullYear();
-  let mediaFilter = 'tv';
+  let mediaFilter = 'all'; // Ensure 'all' is a valid filter option
   let searchQuery = '';
   let hoverAnime = null;
 
@@ -77,7 +77,7 @@
 
 <main class="p-4 bg-primary min-h-screen text-secondary flex justify-center">
   <div class="w-full max-w-screen-xl">
-    <!-- Media Filter -->
+    <!-- Media Filter and Search Components -->
     <Search
       {mediaFilter}
       {searchQuery}
