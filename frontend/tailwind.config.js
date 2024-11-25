@@ -8,7 +8,7 @@ module.exports = {
         secondary: '#D76C82',
         accent1: '#B03052',
         accent2: '#3D0301',
-        gray: '#2D2D2D',
+        darkgray: '#2D2D2D',
       },
       fontSize: {
         'h1': ['2.25rem', { lineHeight: '2.5rem', fontWeight: '700' }], // e.g., 36px

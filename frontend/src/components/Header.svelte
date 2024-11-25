@@ -6,7 +6,7 @@
 </script>
 
 <!-- Header.svelte -->
-<header class="bg-secondary text-secondary p-4 shadow-md">
+<header class="bg-secondary  p-4 shadow-md">
   <div class="container mx-auto flex justify-between items-center max-sm:flex-col max-sm:gap-3">
     <!-- App Title -->
     <div class="flex justify-between gap-3 items-center">
@@ -26,7 +26,7 @@
         href="https://myanimelist.net/"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-accent1 transition-colors duration-200 text-gray"
+        class="hover:text-accent1 transition-colors duration-200 text-black"
       >
         MyAnimeList
       </a>
@@ -34,7 +34,7 @@
         href="https://github.com/egesd/anime-viewer"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-accent1 transition-colors duration-200 text-gray"
+        class="hover:text-accent1 transition-colors duration-200 text-black"
       >
         GitHub
       </a>

@@ -25,8 +25,8 @@
     px-4 py-2 rounded-lg font-semibold transition-transform transition-colors duration-200
     ${
       variant === 'primary'
-        ? 'bg-secondary text-gray hover:bg-accent1 focus:ring-2 focus:ring-accent2 focus:ring-offset-2'
-        : 'bg-accent1 text-gray hover:text-white hover:bg-accent2 focus:ring-2 focus:ring-secondary focus:ring-offset-2'
+        ? 'bg-secondary text-black hover:text-white hover:bg-accent1 focus:ring-2 focus:ring-accent2 focus:ring-offset-2'
+        : 'bg-accent1 text-white hover:text-white hover:bg-accent2 focus:ring-2 focus:ring-secondary focus:ring-offset-2'
     }
     ${fullWidth ? 'w-full' : ''}
     ${className}

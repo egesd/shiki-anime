@@ -50,7 +50,7 @@
     {/if}
     {#if anime?.mean !== undefined}
       <p
-        class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-white text-sm px-2 py-1 rounded md:text-base text-2xl"
+        class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-black text-sm px-2 py-1 rounded md:text-base text-2xl"
       >
         <FontAwesomeIcon icon={faStar} class="mr-1" />
         {anime.mean.toFixed(1)}
@@ -60,7 +60,7 @@
 
   <div class="p-3 h-20 flex items-center justify-center">
     <h2
-      class="text-md font-semibold text-gray font-bruce text-center"
+      class="text-md font-semibold text-black font-bruce text-center"
       title={anime?.title}
     >
       {anime?.title?.length > 35
@@ -72,7 +72,7 @@
   <!-- Hover Modal for Additional Details -->
   {#if isHovered}
     <div
-      class="absolute inset-0 bg-secondary bg-opacity-100  p-4 rounded-lg text-gray z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-base"
+      class="absolute inset-0 bg-secondary bg-opacity-100  p-4 rounded-lg text-black z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-base"
     >
       {#if anime?.mean !== undefined}
         <p
