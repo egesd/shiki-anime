@@ -61,7 +61,7 @@
   `}
 >
   <div
-    class={`flex ${isPinned ? 'flex-row ' : 'flex-col'} max-sm:flex-col sm:items-center sm:justify-between gap-4`}
+    class={`flex ${isPinned ? 'flex-row ' : 'flex-col'} max-sm:flex-col sm:items-center sm:justify-center gap-4`}
   >
     <!-- Media Filter -->
     <MediaFilter
@@ -72,11 +72,11 @@
 
     <!-- Search Bar -->
     {#if !isPinned}
-    <SearchBar
-      bind:searchQuery
-      on:searchQueryChange={handleSearchQueryChange}
-      {isPinned}
-    />
+      <SearchBar
+        bind:searchQuery
+        on:searchQueryChange={handleSearchQueryChange}
+        {isPinned}
+      />
     {/if}
 
     <!-- Season and Year Selector -->

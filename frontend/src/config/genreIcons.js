@@ -31,7 +31,6 @@ import {
   faCity,
   faClock,
   faBuilding,
-  faCrown,
   faSearch,
   faMedal,
   faGamepad,
@@ -41,8 +40,6 @@ import {
   faFilm,
   faMicrophone,
   faSyringe,
-  faShip,
-  faUserGraduate,
   faUserTie,
 } from '@fortawesome/free-solid-svg-icons';
 
