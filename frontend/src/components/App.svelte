@@ -24,7 +24,7 @@
 
   let season = getCurrentSeason();
   let year = new Date().getFullYear();
-  let mediaFilter = 'all'; // Ensure 'all' is a valid filter option
+  let mediaFilter = 'all'; // Change default to 'all'
   let searchQuery = '';
   let hoverAnime = null;
 
