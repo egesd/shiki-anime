@@ -35,7 +35,7 @@
       aria-label="Scroll to top"
       className="p-3 rounded-full shadow-lg hover:bg-accent1 transition-colors duration-200"
     >
-      <FontAwesomeIcon icon={faArrowUp} class="text-white text-3xl" />
+      <FontAwesomeIcon icon={faArrowUp} class="text-black text-3xl" />
     </Button>
   </div>
 {/if}

@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const axiosRetry = require('axios-retry').default;
+const Bottleneck = require('bottleneck');
 const serverless = require('serverless-http');
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
@@ -8,10 +10,10 @@ require('dotenv').config();
 const app = express();
 
 const allowedOrigins = [
-  'http://localhost:5000', // Local development
-  'http://localhost:5173', // Local development
-  'http://localhost:8888', // Netlify Dev
-  'https://anime-viewer-app.netlify.app', // Production
+  'http://localhost:5000',
+  'http://localhost:5173',
+  'http://localhost:8888',
+  'https://shiki-anime.netlify.app/',
 ];
 
 // Enable CORS dynamically based on origin
@@ -37,16 +39,61 @@ const supabaseKey = process.env.VITE_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const seasons = ['winter', 'spring', 'summer', 'fall'];
-const startYear = 1980; // Adjust the start year as needed
+const startYear = 2010;
 const endYear = new Date().getFullYear();
-const maxRetries = 5; // Maximum number of retries for failed requests
-const initialDelay = 1000; // Initial delay between retries in milliseconds
-const requestDelay = 500; // Delay between consecutive API requests in milliseconds
+const maxRetries = 5;
+const initialDelay = 1000;
+const requestDelay = 500;
 
 // Utility function to delay execution
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+// Configure axios-retry to handle 429 errors with exponential backoff
+axiosRetry(axios, {
+  retries: maxRetries,
+  retryDelay: (retryCount) => {
+    return axiosRetry.exponentialDelay(retryCount);
+  },
+  retryCondition: (error) => {
+    // Retry on 429 (Too Many Requests) or network errors
+    return (
+      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+      error.response.status === 429
+    );
+  },
+});
+
+// Initialize Bottleneck for Jikan API rate limiting
+const limiter = new Bottleneck({
+  minTime: 350, // Approximately 3 requests per second
+  maxConcurrent: 1,
+});
+
+// In-memory cache to store streaming service data
+const cache = new Map();
+
+// Wrapped Jikan API fetch with rate limiting and caching
+const jikanFetch = limiter.wrap(async (animeId) => {
+  if (cache.has(animeId)) {
+    return cache.get(animeId);
+  }
+
+  try {
+    const jikanResponse = await axios.get(
+      `https://api.jikan.moe/v4/anime/${animeId}/streaming`
+    );
+    console.log(`Jikan Streaming Response for Anime ID ${animeId}:`, jikanResponse.data); // Log the streaming response
+
+    const streamingServices = jikanResponse.data.data || [];
+    cache.set(animeId, streamingServices);
+    return streamingServices;
+  } catch (error) {
+    console.error(`Jikan Streaming API Error for Anime ID ${animeId}:`, error.message);
+    throw error;
+  }
+});
 
 // Fetch and store anime data for a specific year and season
 async function fetchAndStoreAnimeData(year, season) {
@@ -83,13 +130,24 @@ async function fetchAndStoreAnimeData(year, season) {
       const uniqueData = [];
       const existingIds = new Set();
 
-      response.data.data.forEach((anime) => {
+      for (const anime of response.data.data) {
         const animeId = anime.node.id;
         if ((anime.node.mean ?? 0) >= 7 && !existingIds.has(animeId)) {
           existingIds.add(animeId);
-          uniqueData.push(anime);
+
+          // Fetch streaming services with rate limiting and caching
+          const streamingServices = await jikanFetch(animeId);
+          console.log('streaming', streamingServices);
+
+          uniqueData.push({
+            ...anime,
+            streaming_service: streamingServices.map((service) => ({
+              name: service.name,
+              url: service.url,
+            })),
+          });
         }
-      });
+      }
 
       uniqueData.sort((a, b) => (b.node.mean ?? 0) - (a.node.mean ?? 0));
 
@@ -104,6 +162,7 @@ async function fetchAndStoreAnimeData(year, season) {
           num_episodes: anime.node.num_episodes,
           broadcast_day: anime.node.broadcast?.day_of_the_week,
           broadcast_time: anime.node.broadcast?.start_time,
+          streaming_service: anime.streaming_service, // Store as JSON
           main_picture: anime.node.main_picture,
           season,
           year,
@@ -112,7 +171,7 @@ async function fetchAndStoreAnimeData(year, season) {
       );
 
       if (error) {
-        console.error('Error inserting data into Supabase:', error);
+        console.error('Supabase Insert Error:', error);
         throw error; // Trigger retry logic
       }
 
@@ -121,13 +180,24 @@ async function fetchAndStoreAnimeData(year, season) {
       );
 
       offset += limit;
-      await delay(requestDelay); // Delay between API requests to prevent rate limiting
+      await delay(requestDelay); // Delay between MAL API requests
     } catch (error) {
       console.error(
         `Error fetching data for ${season} ${year}:`,
         error.message
       );
-      throw error; // Let the caller handle the retry
+
+      if (
+        axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+        error.response.status === 429
+      ) {
+        // Implement your retry strategy or skip
+        throw error; // This will trigger retry logic in the caller
+      } else {
+        // Handle other errors
+        console.error(`Unhandled error: ${error.message}`);
+        throw error;
+      }
     }
   }
 }

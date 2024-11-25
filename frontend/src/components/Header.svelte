@@ -12,7 +12,7 @@
     <div class="flex justify-between gap-3 items-center">
       <FontAwesomeIcon icon={logoIcon} class="text-3xl text-black" />
       <!-- Logo icon -->
-      <h1 class="text-3xl font-bold text-accent2 font-yoruka">Anime Viewer</h1>
+      <h1 class="text-3xl font-bold text-accent2 font-yoruka">ShikiAnime</h1>
     </div>
 
     <!-- App Description -->
