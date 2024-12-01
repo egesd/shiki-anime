@@ -1,11 +1,25 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faStar } from '@fortawesome/free-solid-svg-icons';
+  import { faStar, faPlay } from '@fortawesome/free-solid-svg-icons';
   import { genreIcons } from '../config/genreIcons';
   import { convertJSTToFinnish } from '../utils/timezone';
 
   export let anime;
+
+  const FINNISH_SERVICES = new Set([
+    'Crunchyroll',
+    'Netflix',
+    'Disney+',
+    'HBO Max',
+    'Max',
+    'Amazon Prime'
+  ]);
+
+  $: relevantStreaming =
+    anime?.streaming_service?.filter((service) =>
+      FINNISH_SERVICES.has(service.name)
+    ) || [];
 
   const dispatch = createEventDispatcher();
   let isHovered = false; // Track hover state
@@ -72,7 +86,7 @@
   <!-- Hover Modal for Additional Details -->
   {#if isHovered}
     <div
-      class="absolute inset-0 bg-secondary bg-opacity-100  p-4 rounded-lg text-black z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-base"
+      class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-black z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-base"
     >
       {#if anime?.mean !== undefined}
         <p
@@ -81,6 +95,27 @@
           <FontAwesomeIcon icon={faStar} class="mr-2" />
           {anime.mean.toFixed(1)}
         </p>
+      {/if}
+
+      <!-- Add Streaming Services as Clickable Links with Tailwind Colors -->
+      {#if relevantStreaming.length > 0}
+        <div class="mt-2 flex flex-col items-center">
+          <strong>Streaming:</strong>
+          <div class="flex gap-2 mt-1 flex-wrap justify-center">
+            {#each relevantStreaming as service}
+              <a
+                href={service.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-accent1 bg-opacity-90 text-white text-sm px-2 py-1 rounded mb-1 flex items-center hover:text-white hover:bg-accent2
+                hover:bg-opacity-100 transition-colors"
+              >
+                <FontAwesomeIcon icon={faPlay} class="mr-2" />
+                <span>{service.name}</span>
+              </a>
+            {/each}
+          </div>
+        </div>
       {/if}
 
       <h2 class="text-3xl md:text-xl font-bold mb-2 font-bruce text-center">
