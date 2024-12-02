@@ -1,8 +1,9 @@
+<!-- frontend/src/components/Search.svelte -->
 <script>
   import MediaFilter from './MediaFilter.svelte';
   import SearchBar from './SearchBar.svelte';
   import SeasonYearSelector from './SeasonYearSelector.svelte';
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   export let mediaFilter;
   export let searchQuery;
@@ -15,41 +16,29 @@
   let sentinel; // Reference to the sentinel element
 
   // Forward events from MediaFilter
-  function handleFilterChange(event) {
-    dispatch('filterChange', event.detail);
+  function handleFilterChange(newFilter) {
+    dispatch('filterChange', newFilter);
   }
 
   // Forward events from SearchBar
-  function handleSearchQueryChange(event) {
-    dispatch('searchQueryChange', event.detail);
+  function handleSearchQueryChange(newSearchQuery) {
+    dispatch('searchQueryChange', newSearchQuery);
+  }
+
+  function handleGenreChange(event) {
+    const newGenre = event.detail;
+    console.log('Search received genreChange with:', newGenre);
+    dispatch('genreChange', newGenre);
   }
 
   // Forward events from SeasonYearSelector
-  function handleSeasonChange(event) {
-    dispatch('seasonChange', event.detail);
+  function handleSeasonChange(newSeason) {
+    dispatch('seasonChange', newSeason);
   }
 
-  function handleYearChange(event) {
-    dispatch('yearChange', event.detail);
+  function handleYearChange(newYear) {
+    dispatch('yearChange', newYear);
   }
-
-  onMount(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isPinned = !entry.isIntersecting;
-      },
-      {
-        threshold: [0],
-        rootMargin: '200px 0px 0px 0px',
-      }
-    );
-
-    if (sentinel) {
-      observer.observe(sentinel);
-    }
-
-    return () => observer.unobserve(sentinel);
-  });
 </script>
 
 <div bind:this={sentinel} class="h-[1px] pointer-events-none"></div>
@@ -61,7 +50,7 @@
   `}
 >
   <div
-    class={`flex ${isPinned ? 'flex-row ' : 'flex-col'} max-sm:flex-col sm:items-center sm:justify-center gap-4`}
+    class={`flex ${isPinned ? 'flex-row' : 'flex-col'} max-sm:flex-col sm:items-center sm:justify-center gap-4`}
   >
     <!-- Media Filter -->
     <MediaFilter
@@ -74,8 +63,8 @@
     {#if !isPinned}
       <SearchBar
         bind:searchQuery
+        on:genreChange={handleGenreChange}
         on:searchQueryChange={handleSearchQueryChange}
-        {isPinned}
       />
     {/if}
 

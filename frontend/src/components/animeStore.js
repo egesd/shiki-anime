@@ -1,13 +1,14 @@
 // frontend/src/components/animeStore.js
 import { writable } from 'svelte/store';
 import { supabase } from './supabaseClient';
+import { genreNameToIdMap } from '../config/genreMapping.js'; // Import the mapping
 
 export const animeData = writable([]);
 export const loading = writable(false);
 export const error = writable(null);
 export const hasMoreData = writable(true); // Track if more data is available
 
-export async function fetchAnimeDataFromSupabase(season, year, reset = false) {
+export async function fetchAnimeDataFromSupabase(season, year, genre, reset = false) {
   loading.set(true);
   error.set(null);
 
@@ -25,6 +26,23 @@ export async function fetchAnimeDataFromSupabase(season, year, reset = false) {
 
     if (season !== 'all') {
       query = query.eq('season', season);
+    }
+
+    if (genre && genre !== 'All Genres') {
+      // Retrieve the genre ID from the mapping
+      const genreId = genreNameToIdMap[genre];
+      if (!genreId) {
+        console.error(`Genre ID not found for genre: ${genre}`);
+        throw new Error('Invalid genre selection');
+      }
+
+      const genresFilter = [{ name: genre, id: genreId }];
+
+      console.log('Applying genresFilter:', genresFilter);
+
+      const genresFilterString = JSON.stringify(genresFilter);
+
+      query = query.contains('genres', genresFilterString);
     }
 
     const { data, error } = await query;

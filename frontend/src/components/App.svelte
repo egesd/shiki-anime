@@ -24,10 +24,12 @@
 
   let season = getCurrentSeason();
   let year = new Date().getFullYear();
-  let mediaFilter = 'tv'; // Change default to 'all'
+  let mediaFilter = 'tv';
   let searchQuery = '';
+  let selectedGenre = 'All Genres';
   let hoverAnime = null;
 
+  // Debounce function remains unchanged
   function debounce(func, wait) {
     let timeout;
     return function (...args) {
@@ -36,13 +38,18 @@
     };
   }
 
-  // Filter anime based on type and search query
+  // Update filtering to check genre.name
   $: filteredAnime = $animeData
     .filter(
       (anime) => mediaFilter === 'all' || anime.media_type === mediaFilter
     )
     .filter((anime) =>
       anime.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter((anime) =>
+      selectedGenre === 'All Genres'
+        ? true
+        : anime.genres.some((genre) => genre.name === selectedGenre)
     );
 
   function handleMouseEnter(anime) {
@@ -53,24 +60,32 @@
     hoverAnime = null;
   }
 
-  // Infinite scroll handler with loading and hasMoreData check
+  // Infinite scroll handler with loading, hasMoreData, and genre check
   function handleScroll() {
     if ($loading || !$hasMoreData) return; // Stop if loading or no more data
     if (
       window.innerHeight + window.scrollY >=
       document.body.offsetHeight - 500
     ) {
-      fetchAnimeDataFromSupabase(season, year);
+      fetchAnimeDataFromSupabase(season, year, selectedGenre);
     }
   }
 
   const debouncedHandleScroll = debounce(handleScroll, 200);
 
   onMount(() => {
-    fetchAnimeDataFromSupabase(season, year);
+    fetchAnimeDataFromSupabase(season, year, selectedGenre);
     window.addEventListener('scroll', debouncedHandleScroll);
     return () => window.removeEventListener('scroll', debouncedHandleScroll);
   });
+
+  // Handle genre change event from SearchBar
+  function handleGenreChange(newGenre) {
+    console.log("handleGenreChange received:", newGenre); // Debugging line
+    selectedGenre = newGenre;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
+  }
 </script>
 
 <Header />
@@ -79,21 +94,22 @@
   <div class="w-full max-w-screen-4k">
     <!-- Media Filter and Search Components -->
     <Search
-      {mediaFilter}
-      {searchQuery}
-      {season}
-      {year}
+      bind:mediaFilter
+      bind:searchQuery
+      bind:season
+      bind:year
       on:filterChange={(e) => (mediaFilter = e.detail)}
       on:searchQueryChange={(e) => (searchQuery = e.detail)}
+      on:genreChange={(e) => handleGenreChange(e.detail)}
       on:seasonChange={(e) => {
         season = e.detail;
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        fetchAnimeDataFromSupabase(season, year, true);
+        fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
       }}
       on:yearChange={(e) => {
         year = parseInt(e.detail, 10);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        fetchAnimeDataFromSupabase(season, year, true);
+        fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
       }}
     />
 
