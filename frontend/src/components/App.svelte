@@ -76,7 +76,7 @@
 <Header />
 
 <main class="p-4 bg-primary min-h-screen text-secondary flex justify-center">
-  <div class="w-full max-w-screen-xl">
+  <div class="w-full max-w-screen-4k">
     <!-- Media Filter and Search Components -->
     <Search
       {mediaFilter}
@@ -111,7 +111,7 @@
 
     <!-- Display Anime Cards -->
     {#if filteredAnime && filteredAnime.length}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4">
         {#each filteredAnime as anime}
           <SlideIn distance={30} duration={500}>
             <AnimeCard

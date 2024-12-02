@@ -22,6 +22,10 @@ module.exports = {
         yoruka: ['Yoruka'], // Custom font family
         bruce:['Bruce'],
       },
+      screens: {
+        '2k': '2560px',
+        '4k': '3840px',
+      },
     },
   },
   plugins: [],
