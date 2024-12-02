@@ -81,7 +81,6 @@
 
   // Handle genre change event from SearchBar
   function handleGenreChange(newGenre) {
-    console.log("handleGenreChange received:", newGenre); // Debugging line
     selectedGenre = newGenre;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
@@ -94,10 +93,10 @@
   <div class="w-full max-w-screen-4k">
     <!-- Media Filter and Search Components -->
     <Search
-      bind:mediaFilter
-      bind:searchQuery
-      bind:season
-      bind:year
+      {mediaFilter}
+      {searchQuery}
+      {season}
+      {year}
       on:filterChange={(e) => (mediaFilter = e.detail)}
       on:searchQueryChange={(e) => (searchQuery = e.detail)}
       on:genreChange={(e) => handleGenreChange(e.detail)}
@@ -127,7 +126,9 @@
 
     <!-- Display Anime Cards -->
     {#if filteredAnime && filteredAnime.length}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4"
+      >
         {#each filteredAnime as anime}
           <SlideIn distance={30} duration={500}>
             <AnimeCard

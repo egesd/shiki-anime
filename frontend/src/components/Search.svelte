@@ -32,28 +32,27 @@
   });
 
   // Forward events from MediaFilter
-  function handleFilterChange(newFilter) {
-    dispatch('filterChange', newFilter);
+  function handleFilterChange(event) {
+    dispatch('filterChange', event.detail);
   }
 
   // Forward events from SearchBar
-  function handleSearchQueryChange(newSearchQuery) {
-    dispatch('searchQueryChange', newSearchQuery);
+  function handleSearchQueryChange(event) {
+    dispatch('searchQueryChange', event.detail);
   }
 
   function handleGenreChange(event) {
     const newGenre = event.detail;
-    console.log('Search received genreChange with:', newGenre);
     dispatch('genreChange', newGenre);
   }
 
   // Forward events from SeasonYearSelector
-  function handleSeasonChange(newSeason) {
-    dispatch('seasonChange', newSeason);
+  function handleSeasonChange(event) {
+    dispatch('seasonChange', event.detail);
   }
 
-  function handleYearChange(newYear) {
-    dispatch('yearChange', newYear);
+  function handleYearChange(event) {
+    dispatch('yearChange', event.detail);
   }
 </script>
 

@@ -38,7 +38,6 @@ export async function fetchAnimeDataFromSupabase(season, year, genre, reset = fa
 
       const genresFilter = [{ name: genre, id: genreId }];
 
-      console.log('Applying genresFilter:', genresFilter);
 
       const genresFilterString = JSON.stringify(genresFilter);
 
