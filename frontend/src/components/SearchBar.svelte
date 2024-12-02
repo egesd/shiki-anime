@@ -20,31 +20,31 @@
   }
 </script>
 
-<div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
-  <label for="search" class="text-accent2">
-    <FontAwesomeIcon icon={faSearch} class="mr-1" /> Search:
-  </label>
-  <input
-    id="search"
-    type="text"
-    placeholder="Search anime by title..."
-    bind:value={searchQuery}
-    class="p-2 rounded bg-secondary text-white placeholder-black w-64"
-  />
-</div>
+<div class="flex flex-row items-center gap-4">
+  <div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
+    <label for="search" class="text-accent2">
+      <FontAwesomeIcon icon={faSearch} class="mr-1" /> Search:
+    </label>
+    <input
+      id="search"
+      type="text"
+      placeholder="Search anime by title..."
+      bind:value={searchQuery}
+      class="p-2 rounded bg-secondary text-white placeholder-black w-64"
+    />
+  </div>
 
-<div class="flex items-center justify-center gap-4 sm:flex-row flex-col mt-4">
-  <label for="genre" class="text-accent2">
-    Genre:
-  </label>
-  <select
-    id="genre"
-    bind:value={selectedGenre}
-    on:change={handleGenreChange}
-    class="p-2 rounded bg-secondary text-white w-64"
-  >
-    {#each genreOptions as genre}
-      <option value={genre}>{genre}</option>
-    {/each}
-  </select>
+  <div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
+    <label for="genre" class="text-accent2"> Genre: </label>
+    <select
+      id="genre"
+      bind:value={selectedGenre}
+      on:change={handleGenreChange}
+      class="p-2 rounded bg-secondary text-black border-r-4 border-transparent"
+    >
+      {#each genreOptions as genre}
+        <option value={genre}>{genre}</option>
+      {/each}
+    </select>
+  </div>
 </div>

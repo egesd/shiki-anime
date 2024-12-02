@@ -3,7 +3,7 @@
   import MediaFilter from './MediaFilter.svelte';
   import SearchBar from './SearchBar.svelte';
   import SeasonYearSelector from './SeasonYearSelector.svelte';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
 
   export let mediaFilter;
   export let searchQuery;
@@ -14,6 +14,22 @@
 
   let isPinned = false;
   let sentinel; // Reference to the sentinel element
+
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isPinned = !entry.isIntersecting;
+      },
+      {
+        threshold: [0],
+        rootMargin: '200px 0px 0px 0px',
+      }
+    );
+    if (sentinel) {
+      observer.observe(sentinel);
+    }
+    return () => observer.unobserve(sentinel);
+  });
 
   // Forward events from MediaFilter
   function handleFilterChange(newFilter) {
