@@ -12,11 +12,11 @@
     <div class="flex justify-between gap-3 items-center">
       <FontAwesomeIcon icon={logoIcon} class="text-3xl text-black" />
       <!-- Logo icon -->
-      <h1 class="text-3xl font-bold text-accent2 font-yoruka">ShikiAnime</h1>
+      <h1 class="text-3xl font-bold text-black font-yoruka">ShikiAnime</h1>
     </div>
 
     <!-- App Description -->
-    <h2 class="text-h3 text-accent2 font-yoruka">
+    <h2 class="text-h3 text-black font-yoruka">
       Explore top-rated anime by season and year
     </h2>
 

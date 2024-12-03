@@ -20,7 +20,7 @@
   }
 </script>
 
-<div class="flex flex-row items-center gap-4">
+<div class="flex sm:flex-row flex-col items-center gap-4">
   <div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
     <label for="search" class="text-accent2">
       <FontAwesomeIcon icon={faSearch} class="mr-1" /> Search:
