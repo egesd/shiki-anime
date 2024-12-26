@@ -6,6 +6,7 @@
   import { convertJSTToFinnish } from '../utils/timezone';
 
   export let anime;
+  export let isCurrentlyAiring = false;
 
   const FINNISH_SERVICES = new Set([
     'Crunchyroll',
@@ -13,7 +14,7 @@
     'Disney+',
     'HBO Max',
     'Max',
-    'Amazon Prime'
+    'Amazon Prime',
   ]);
 
   $: relevantStreaming =
@@ -139,7 +140,7 @@
           {/each}
         </div>
       </div>
-      {#if convertedBroadcast.day !== 'Unknown' && convertedBroadcast.time !== 'Unknown'}
+      {#if isCurrentlyAiring && convertedBroadcast.day !== 'Unknown' && convertedBroadcast.time !== 'Unknown'}
         <div class="mt-2 flex flex-col items-center text-center">
           <strong>Broadcast:</strong>
           <p class="mt-1">
@@ -149,8 +150,6 @@
             at {convertedBroadcast.time}
           </p>
         </div>
-      {:else}
-        <p class="mt-2 text-center">Broadcast information not available.</p>
       {/if}
     </div>
   {/if}

@@ -7,20 +7,13 @@
     hasMoreData,
   } from './animeStore.js';
   import { onMount } from 'svelte';
+  import { getCurrentSeason, isCurrentSeason } from '../utils/seasonUtils';
   import Header from './Header.svelte';
   import AnimeCard from './AnimeCard.svelte';
   import InfiniteScrollIndicator from './InfiniteScrollIndicator.svelte';
   import SlideIn from './SlideIn.svelte';
   import Search from './Search.svelte';
   import ScrollTopButton from './ScrollTopButton.svelte';
-
-  function getCurrentSeason() {
-    const month = new Date().getMonth();
-    if (month >= 0 && month <= 2) return 'winter';
-    if (month >= 3 && month <= 5) return 'spring';
-    if (month >= 6 && month <= 8) return 'summer';
-    return 'fall';
-  }
 
   let season = getCurrentSeason();
   let year = new Date().getFullYear();
@@ -133,6 +126,7 @@
           <SlideIn distance={30} duration={500}>
             <AnimeCard
               {anime}
+              isCurrentlyAiring={isCurrentSeason(anime)}
               on:hoverEnter={handleMouseEnter}
               on:hoverLeave={handleMouseLeave}
             />
