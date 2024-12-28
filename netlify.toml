@@ -2,8 +2,14 @@
   publish = "frontend/dist"
   command = "npm run build"
 
-[functions]
+[[functions]]
   directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[functions]]
+  # Run scheduled-fetch.js every Sunday at midnight UTC
+  name = "scheduled-fetch"
+  schedule = "0 0 * * 0"
 
 [[redirects]]
   from = "/api/*"
@@ -15,9 +21,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[[plugins]]
-  package = "@netlify/plugin-scheduled-functions"
-
-  [plugins.inputs]
-    schedule = "0 0 * * *" # Run every 24 hours
