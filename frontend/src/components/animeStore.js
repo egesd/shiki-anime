@@ -8,7 +8,7 @@ export const loading = writable(false);
 export const error = writable(null);
 export const hasMoreData = writable(true); // Track if more data is available
 
-export async function fetchAnimeDataFromSupabase(season, year, genre, reset = false) {
+export async function fetchAnimeDataFromSupabase(season, year, genre, showUpcoming, reset = false) {
   loading.set(true);
   error.set(null);
 
@@ -21,8 +21,13 @@ export async function fetchAnimeDataFromSupabase(season, year, genre, reset = fa
     let query = supabase
       .from('anime')
       .select('*')
-      .eq('year', year)
       .order('mean', { ascending: false });
+
+    if (showUpcoming) {
+      query = query.eq('year', 2025);
+    } else {
+      query = query.in('year', [year, 2025]);
+    }
 
     if (season !== 'all') {
       query = query.eq('season', season);
@@ -37,14 +42,13 @@ export async function fetchAnimeDataFromSupabase(season, year, genre, reset = fa
       }
 
       const genresFilter = [{ name: genre, id: genreId }];
-
-
       const genresFilterString = JSON.stringify(genresFilter);
 
       query = query.contains('genres', genresFilterString);
     }
 
     const { data, error } = await query;
+    console.log(`Fetched ${data.length} anime entries for year=2025`); // Added logging
 
     if (error) throw error;
 

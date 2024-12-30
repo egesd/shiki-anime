@@ -57,18 +57,30 @@
   <div class="relative w-full" style="padding-bottom: 150%;">
     {#if anime?.main_picture}
       <img
-        src={anime.main_picture.large || anime.main_picture.medium}
+        src={
+          anime.main_picture?.large_image_url ||
+          anime.main_picture?.image_url ||
+          anime.main_picture?.small_image_url ||
+          anime.main_picture?.large ||
+          anime.main_picture?.medium ||
+          anime.main_picture ||
+          '/default-image.jpg' // Fallback image
+        }
         alt={anime.title}
         class="absolute top-0 left-0 w-full h-full object-cover"
         loading="lazy"
       />
     {/if}
-    {#if anime?.mean !== undefined}
+    {#if anime.mean !== null && anime.mean !== undefined}
       <p
         class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-black text-sm px-2 py-1 rounded md:text-base text-2xl"
       >
         <FontAwesomeIcon icon={faStar} class="mr-1" />
         {anime.mean.toFixed(1)}
+      </p>
+    {:else}
+      <p class="absolute top-2 right-2 bg-secondary bg-opacity-90 text-black text-sm px-2 py-1 rounded md:text-base text-2xl">
+        N/A
       </p>
     {/if}
   </div>
@@ -89,12 +101,16 @@
     <div
       class="absolute inset-0 bg-secondary bg-opacity-100 p-4 rounded-lg text-black z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-base"
     >
-      {#if anime?.mean !== undefined}
+      {#if anime.mean !== null && anime.mean !== undefined}
         <p
           class="absolute top-2 right-2 bg-accent1 text-white text-sm px-2 py-1 rounded flex items-center md:text-base text-2xl"
         >
           <FontAwesomeIcon icon={faStar} class="mr-2" />
           {anime.mean.toFixed(1)}
+        </p>
+      {:else}
+        <p class="absolute top-2 right-2 bg-accent1 text-white text-sm px-2 py-1 rounded flex items-center md:text-base text-2xl">
+          N/A
         </p>
       {/if}
 

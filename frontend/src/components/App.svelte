@@ -14,6 +14,7 @@
   import SlideIn from './SlideIn.svelte';
   import Search from './Search.svelte';
   import ScrollTopButton from './ScrollTopButton.svelte';
+  import Button from './Button.svelte';
 
   let season = getCurrentSeason();
   let year = new Date().getFullYear();
@@ -21,6 +22,7 @@
   let searchQuery = '';
   let selectedGenre = 'All Genres';
   let hoverAnime = null;
+  let showUpcoming = false; // New state variable for toggle
 
   // Debounce function remains unchanged
   function debounce(func, wait) {
@@ -31,8 +33,14 @@
     };
   }
 
-  // Update filtering to check genre.name
+  // Reactive statement to filter anime based on toggle
   $: filteredAnime = $animeData
+    .filter((anime) => {
+      if (showUpcoming) {
+        return anime.year === 2025;
+      }
+      return anime.year === year;
+    })
     .filter(
       (anime) => mediaFilter === 'all' || anime.media_type === mediaFilter
     )
@@ -55,7 +63,7 @@
 
   // Infinite scroll handler with loading, hasMoreData, and genre check
   function handleScroll() {
-    if ($loading || !$hasMoreData) return; // Stop if loading or no more data
+    if ($loading || !$hasMoreData || showUpcoming) return; // Stop if loading, no more data, or showing upcoming
     if (
       window.innerHeight + window.scrollY >=
       document.body.offsetHeight - 500
@@ -67,7 +75,7 @@
   const debouncedHandleScroll = debounce(handleScroll, 200);
 
   onMount(() => {
-    fetchAnimeDataFromSupabase(season, year, selectedGenre);
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, showUpcoming);
     window.addEventListener('scroll', debouncedHandleScroll);
     return () => window.removeEventListener('scroll', debouncedHandleScroll);
   });
@@ -76,13 +84,35 @@
   function handleGenreChange(newGenre) {
     selectedGenre = newGenre;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, showUpcoming, true);
+  }
+
+  // **New Function to Handle Upcoming Anime Toggle**
+  function toggleUpcoming() {
+    showUpcoming = !showUpcoming;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (showUpcoming) {
+      season = 'all';
+      mediaFilter = 'all';
+      selectedGenre = 'All Genres';
+      fetchAnimeDataFromSupabase('all', 2025, 'All Genres', showUpcoming, true);
+    } else {
+      // Reload current anime data when toggling back
+      fetchAnimeDataFromSupabase(
+        season,
+        year,
+        selectedGenre,
+        showUpcoming,
+        true
+      );
+    }
   }
 </script>
 
 <Header />
 
-<main class="p-4 bg-primary min-h-screen text-secondary flex justify-center">
+<main class="pb-4 px-4 bg-primary min-h-screen text-secondary flex justify-center">
   <div class="w-full max-w-screen-4k">
     <!-- Media Filter and Search Components -->
     <Search
@@ -96,14 +126,35 @@
       on:seasonChange={(e) => {
         season = e.detail;
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
+        fetchAnimeDataFromSupabase(
+          season,
+          year,
+          selectedGenre,
+          showUpcoming,
+          true
+        );
       }}
       on:yearChange={(e) => {
         year = parseInt(e.detail, 10);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
+        fetchAnimeDataFromSupabase(
+          season,
+          year,
+          selectedGenre,
+          showUpcoming,
+          true
+        );
       }}
     />
+
+    <!-- Button to Toggle Upcoming Anime -->
+    <Button on:click={toggleUpcoming} variant="primary" className="mb-4">
+      {#if showUpcoming}
+        Show Current Anime
+      {:else}
+        Show Upcoming Anime
+      {/if}
+    </Button>
 
     <!-- Display Spinner when loading and no data is yet available -->
     {#if $loading && !$animeData.length}
@@ -140,7 +191,7 @@
     {/if}
 
     <!-- Optionally, indicate no more data -->
-    {#if !$hasMoreData && $animeData.length > 0}
+    {#if !$hasMoreData && $animeData.length > 0 && !showUpcoming}
       <p class="text-center text-xl mt-4 text-black">No more anime to load.</p>
     {/if}
   </div>
