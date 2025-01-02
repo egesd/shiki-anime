@@ -80,7 +80,7 @@ async function fetchAndStoreAnimeData(year, season) {
             limit,
             offset,
             fields:
-              'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast',
+              'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast,popularity',
           },
           timeout: 10000,
         }
@@ -100,7 +100,7 @@ async function fetchAndStoreAnimeData(year, season) {
 
       for (const anime of response.data.data) {
         const animeId = anime.node.id;
-        if ((anime.node.mean ?? 0) >= 7 && !existingIds.has(animeId)) {
+        if (!existingIds.has(animeId)) {
           existingIds.add(animeId);
 
           // Fetch streaming services with rate limiting and caching
@@ -134,6 +134,7 @@ async function fetchAndStoreAnimeData(year, season) {
           main_picture: anime.node.main_picture,
           season,
           year,
+          popularity: anime.node.popularity,
         })),
         { onConflict: ['id'] }
       );

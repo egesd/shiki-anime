@@ -48,7 +48,6 @@ export async function fetchAnimeDataFromSupabase(season, year, genre, showUpcomi
     }
 
     const { data, error } = await query;
-    console.log(`Fetched ${data.length} anime entries for year=2025`); // Added logging
 
     if (error) throw error;
 

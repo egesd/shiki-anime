@@ -23,6 +23,9 @@
   let selectedGenre = 'All Genres';
   let hoverAnime = null;
   let showUpcoming = false; // New state variable for toggle
+  animeData.subscribe((data) => {
+    console.log('Anime Data:', data);
+  });
 
   // Debounce function remains unchanged
   function debounce(func, wait) {
@@ -34,24 +37,29 @@
   }
 
   // Reactive statement to filter anime based on toggle
+  $: filteredAnime;
   $: filteredAnime = $animeData
     .filter((anime) => {
+      console.log('Year Filter:', anime.year);
       if (showUpcoming) {
         return anime.year === 2025;
       }
       return anime.year === year;
     })
-    .filter(
-      (anime) => mediaFilter === 'all' || anime.media_type === mediaFilter
-    )
-    .filter((anime) =>
-      anime.title.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter((anime) =>
-      selectedGenre === 'All Genres'
+    .filter((anime) => {
+      console.log('Media Filter:', anime.media_type);
+      return mediaFilter === 'all' || anime.media_type === mediaFilter;
+    })
+    .filter((anime) => {
+      console.log('Search Query:', anime.title);
+      return anime.title.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+    .filter((anime) => {
+      console.log('Genre Filter:', anime.genres);
+      return selectedGenre === 'All Genres'
         ? true
-        : anime.genres.some((genre) => genre.name === selectedGenre)
-    );
+        : anime.genres.some((genre) => genre.name === selectedGenre);
+    });
 
   function handleMouseEnter(anime) {
     hoverAnime = anime;
@@ -112,7 +120,9 @@
 
 <Header />
 
-<main class="pb-4 px-4 bg-primary min-h-screen text-secondary flex justify-center">
+<main
+  class="pb-4 px-4 bg-primary min-h-screen text-secondary flex justify-center"
+>
   <div class="w-full max-w-screen-4k">
     <!-- Media Filter and Search Components -->
     <Search
