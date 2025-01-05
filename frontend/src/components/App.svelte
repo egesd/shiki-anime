@@ -14,7 +14,6 @@
   import SlideIn from './SlideIn.svelte';
   import Search from './Search.svelte';
   import ScrollTopButton from './ScrollTopButton.svelte';
-  import Button from './Button.svelte';
 
   let season = getCurrentSeason();
   let year = new Date().getFullYear();
@@ -121,9 +120,9 @@
 <Header />
 
 <main
-  class="pb-4 px-4 bg-primary min-h-screen text-secondary flex justify-center"
+  class="pb-4 px-4 bg-primary min-h-screen text-secondary flex justify-center items-center"
 >
-  <div class="w-full max-w-screen-4k">
+  <div class="w-full max-w-screen-4k flex flex-col">
     <!-- Media Filter and Search Components -->
     <Search
       {mediaFilter}
@@ -157,15 +156,6 @@
       }}
     />
 
-    <!-- Button to Toggle Upcoming Anime -->
-    <Button on:click={toggleUpcoming} variant="primary" className="mb-4">
-      {#if showUpcoming}
-        Show Current Anime
-      {:else}
-        Show Upcoming Anime
-      {/if}
-    </Button>
-
     <!-- Display Spinner when loading and no data is yet available -->
     {#if $loading && !$animeData.length}
       <div class="flex justify-center items-center">
@@ -181,7 +171,7 @@
     <!-- Display Anime Cards -->
     {#if filteredAnime && filteredAnime.length}
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4 w-4/5 self-center"
       >
         {#each filteredAnime as anime}
           <SlideIn distance={30} duration={500}>

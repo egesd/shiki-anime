@@ -1,11 +1,13 @@
-<!-- frontend/src/components/SearchBar.svelte -->
 <script>
   import { createEventDispatcher } from 'svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faSearch } from '@fortawesome/free-solid-svg-icons';
   import { genreNameToIdMap } from '../config/genreMapping.js'; // Import the mapping
+  import ToggleUpcoming from './ToggleUpcoming.svelte';
 
   export let searchQuery;
+  export let showUpcoming;
+  export let toggleUpcoming;
 
   const dispatch = createEventDispatcher();
 
@@ -18,24 +20,25 @@
     const selected = event.target.value;
     dispatch('genreChange', selected);
   }
+
+  function handleSearchChange(event) {
+    dispatch('searchQueryChange', event.target.value);
+  }
 </script>
 
 <div class="flex sm:flex-row flex-col items-center gap-4">
   <div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
-    <label for="search" class="text-accent2">
-      <FontAwesomeIcon icon={faSearch} class="mr-1" /> Search:
-    </label>
     <input
       id="search"
       type="text"
       placeholder="Search anime by title..."
       bind:value={searchQuery}
+      on:input={handleSearchChange}
       class="p-2 rounded bg-secondary text-white placeholder-black w-64"
     />
   </div>
 
   <div class="flex items-center justify-center gap-4 sm:flex-row flex-col">
-    <label for="genre" class="text-accent2"> Genre: </label>
     <select
       id="genre"
       bind:value={selectedGenre}
@@ -47,4 +50,22 @@
       {/each}
     </select>
   </div>
+
+  <ToggleUpcoming {showUpcoming} toggleUpcoming={toggleUpcoming} />
 </div>
+
+<style>
+  .search-bar {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 1rem;
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+</style>

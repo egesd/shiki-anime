@@ -1,4 +1,3 @@
-<!-- frontend/src/components/Search.svelte -->
 <script>
   import MediaFilter from './MediaFilter.svelte';
   import SearchBar from './SearchBar.svelte';
