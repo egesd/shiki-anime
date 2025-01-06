@@ -22,9 +22,6 @@
   let selectedGenre = 'All Genres';
   let hoverAnime = null;
   let showUpcoming = false; // New state variable for toggle
-  animeData.subscribe((data) => {
-    console.log('Anime Data:', data);
-  });
 
   // Debounce function remains unchanged
   function debounce(func, wait) {
@@ -39,22 +36,18 @@
   $: filteredAnime;
   $: filteredAnime = $animeData
     .filter((anime) => {
-      console.log('Year Filter:', anime.year);
       if (showUpcoming) {
         return anime.year === 2025;
       }
       return anime.year === year;
     })
     .filter((anime) => {
-      console.log('Media Filter:', anime.media_type);
       return mediaFilter === 'all' || anime.media_type === mediaFilter;
     })
     .filter((anime) => {
-      console.log('Search Query:', anime.title);
       return anime.title.toLowerCase().includes(searchQuery.toLowerCase());
     })
     .filter((anime) => {
-      console.log('Genre Filter:', anime.genres);
       return selectedGenre === 'All Genres'
         ? true
         : anime.genres.some((genre) => genre.name === selectedGenre);
