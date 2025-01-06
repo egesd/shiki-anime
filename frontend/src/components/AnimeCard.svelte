@@ -99,7 +99,7 @@
   <!-- Hover Modal for Additional Details -->
   {#if isHovered}
     <div
-      class="absolute inset-0 bg-secondary bg-opacity-90 p-4 rounded-lg text-black z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-2xl md:text-base"
+      class="absolute inset-0 bg-secondary bg-opacity-90 p-4 rounded-lg text-black z-10 flex flex-col justify-center items-center gap-4 md:gap-2 text-base"
     >
       {#if anime.mean !== null && anime.mean !== undefined}
         <p
@@ -135,7 +135,7 @@
         </div>
       {/if}
 
-      <h2 class="text-3xl md:text-xl font-bold mb-2 font-bruce text-center">
+      <h2 class="text-xl md:text-base font-bold mb-2 font-bruce text-center">
         {anime?.title}
       </h2>
       <p><strong>Episodes:</strong> {anime?.num_episodes || 'N/A'}</p>
