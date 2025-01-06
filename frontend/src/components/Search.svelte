@@ -14,20 +14,27 @@
   let isPinned = false;
   let sentinel; // Reference to the sentinel element
 
+  // Determine if the screen is large enough for pinned mode
+  let enablePinned = false;
+
   onMount(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isPinned = !entry.isIntersecting;
-      },
-      {
-        threshold: [0],
-        rootMargin: '200px 0px 0px 0px',
-      }
-    );
-    if (sentinel) {
+    enablePinned = window.innerWidth >= 768;
+
+    // Only attach the observer if pinned mode is enabled
+    if (enablePinned && sentinel) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          isPinned = !entry.isIntersecting;
+        },
+        {
+          threshold: [0],
+          rootMargin: '200px 0px 0px 0px',
+        }
+      );
+
       observer.observe(sentinel);
+      return () => observer.unobserve(sentinel);
     }
-    return () => observer.unobserve(sentinel);
   });
 
   // Forward events from MediaFilter
@@ -41,8 +48,7 @@
   }
 
   function handleGenreChange(event) {
-    const newGenre = event.detail;
-    dispatch('genreChange', newGenre);
+    dispatch('genreChange', event.detail);
   }
 
   // Forward events from SeasonYearSelector
