@@ -87,27 +87,7 @@
     fetchAnimeDataFromSupabase(season, year, selectedGenre, showUpcoming, true);
   }
 
-  // **New Function to Handle Upcoming Anime Toggle**
-  function toggleUpcoming() {
-    showUpcoming = !showUpcoming;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (showUpcoming) {
-      season = 'all';
-      mediaFilter = 'all';
-      selectedGenre = 'All Genres';
-      fetchAnimeDataFromSupabase('all', 2025, 'All Genres', showUpcoming, true);
-    } else {
-      // Reload current anime data when toggling back
-      fetchAnimeDataFromSupabase(
-        season,
-        year,
-        selectedGenre,
-        showUpcoming,
-        true
-      );
-    }
-  }
 </script>
 
 <Header />
@@ -122,6 +102,8 @@
       {searchQuery}
       {season}
       {year}
+      {selectedGenre}
+      {showUpcoming}
       on:filterChange={(e) => (mediaFilter = e.detail)}
       on:searchQueryChange={(e) => (searchQuery = e.detail)}
       on:genreChange={(e) => handleGenreChange(e.detail)}
