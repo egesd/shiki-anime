@@ -80,7 +80,7 @@ async function fetchAndStoreAnimeData(year, season) {
             limit,
             offset,
             fields:
-              'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast,popularity',
+              'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast,popularity,alternative_titles,start_date,end_date,synopsis,status,members',
           },
           timeout: 10000,
         }
@@ -105,7 +105,6 @@ async function fetchAndStoreAnimeData(year, season) {
 
           // Fetch streaming services with rate limiting and caching
           const streamingServices = await jikanFetch(animeId);
-          console.log('streaming', streamingServices);
 
           uniqueData.push({
             ...anime,
@@ -116,7 +115,6 @@ async function fetchAndStoreAnimeData(year, season) {
           });
         }
       }
-
       uniqueData.sort((a, b) => (b.node.mean ?? 0) - (a.node.mean ?? 0));
 
       const { data, error } = await supabase.from('anime').upsert(
@@ -135,6 +133,12 @@ async function fetchAndStoreAnimeData(year, season) {
           season,
           year,
           popularity: anime.node.popularity,
+          alternative_titles: anime.node.alternative_titles,
+          start_date: anime.node.start_date,
+          end_date: anime.node.end_date,
+          synopsis: anime.node.synopsis,
+          status: anime.node.status,
+          members: anime.node.members,
         })),
         { onConflict: ['id'] }
       );
