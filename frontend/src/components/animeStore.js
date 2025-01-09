@@ -15,13 +15,15 @@ export async function fetchAnimeDataFromSupabase(season, year, genre, showUpcomi
   if (reset) {
     animeData.set([]);
     hasMoreData.set(true); // Reset the flag when resetting data
+    console.log(animeData);
   }
 
   try {
     let query = supabase
       .from('anime')
       .select('*')
-      .order('mean', { ascending: false });
+      .order('mean', { ascending: false, nullsFirst: false })
+      .order('members', { ascending: false });;
 
     if (showUpcoming) {
       query = query.eq('year', 2025);
