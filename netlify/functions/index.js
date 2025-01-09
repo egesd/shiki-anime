@@ -38,27 +38,113 @@ const supabaseKey = process.env.VITE_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const seasons = ['winter', 'spring', 'summer', 'fall'];
-const startYear = 1980; // Adjust as needed
+const startYear = 2010; // Adjust as needed
 const endYear = new Date().getFullYear();
 const maxRetries = 5;
 const initialDelay = 1000; // milliseconds
 const requestDelay = 500; // milliseconds
 
-// Utility function to delay execution
-async function delay(ms) {
+/**
+ * Utility function to delay execution for a given number of milliseconds.
+ *
+ * @param {number} ms - Milliseconds to delay.
+ * @returns {Promise<void>}
+ */
+function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Function to fetch streaming services using Jikan API
-async function jikanFetch(animeId) {
-  try {
-    const response = await axios.get(`https://api.jikan.moe/v4/anime/${animeId}`);
-    if (response.data && response.data.data && response.data.data.streaming) {
-      return response.data.data.streaming;
+/**
+ * Fetches a resource with retry logic for handling rate limits.
+ *
+ * @param {string} url - The URL to fetch.
+ * @param {object} options - Fetch options.
+ * @param {number} retries - Number of retry attempts.
+ * @param {number} backoff - Initial backoff delay in milliseconds.
+ * @returns {Promise<Response>} - The fetch response.
+ * @throws {Error} - If all retry attempts fail.
+ */
+async function fetchWithRetry(url, options, retries = 5, backoff = 1000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+
+      if (response.status !== 429) {
+        return response;
+      }
+
+      // Calculate exponential backoff with jitter
+      const jitter = Math.random() * 1000;
+      const delayTime = backoff * 2 ** (attempt - 1) + jitter;
+      console.warn(
+        `Rate limited. Attempt ${attempt} of ${retries}. Retrying in ${Math.round(delayTime)}ms...`
+      );
+
+      await delay(delayTime);
+    } catch (error) {
+      console.error(`Fetch error on attempt ${attempt} for URL ${url}:`, error);
+
+      if (attempt === retries) {
+        throw new Error(`Failed to fetch ${url} after ${retries} attempts.`);
+      }
+
+      // Exponential backoff before next retry
+      const delayTime = backoff * 2 ** (attempt - 1);
+      await delay(delayTime);
     }
-    return [];
+  }
+
+  throw new Error(`Failed to fetch ${url} after ${retries} attempts.`);
+}
+
+/**
+ * Fetches streaming services for a given anime ID from the Jikan API.
+ *
+ * @param {number} animeId - The ID of the anime.
+ * @returns {Promise<Array<{ name: string, url: string }>>} - An array of streaming services.
+ */
+async function fetchStreamingServices(animeId) {
+  const url = `https://api.jikan.moe/v4/anime/${animeId}/streaming`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  console.log(`Fetching streaming services for Anime ID: ${animeId}`);
+  console.log(`URL: ${url}`);
+
+  try {
+    const response = await fetchWithRetry(url, options, 5, 1000);
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Ensure the 'data' property exists and is an array
+    if (!data.data || !Array.isArray(data.data)) {
+      console.error(
+        `Unexpected response structure for Anime ID ${animeId}:`,
+        data
+      );
+      return [];
+    }
+
+    // Map each streaming service to an object containing 'name' and 'url'
+    return (
+      data.data.map((service) => ({
+        name: service.name,
+        url: service.url,
+      })) || []
+    );
   } catch (error) {
-    console.error(`Error fetching streaming services for anime ID ${animeId}:`, error.message);
+    console.error(
+      `Error fetching streaming services for Anime ID ${animeId}:`,
+      error
+    );
     return [];
   }
 }
@@ -104,7 +190,7 @@ async function fetchAndStoreAnimeData(year, season) {
           existingIds.add(animeId);
 
           // Fetch streaming services with rate limiting and caching
-          const streamingServices = await jikanFetch(animeId);
+          const streamingServices = await fetchStreamingServices(animeId);
 
           uniqueData.push({
             ...anime,
@@ -228,22 +314,30 @@ app.get('/api/populate', async (req, res) => {
 app.get('/api/populateUpcoming', async (req, res) => {
   try {
     // Fetch upcoming anime from the API
-    const response = await axios.get('https://api.jikan.moe/v4/seasons/upcoming');
+    const response = await axios.get(
+      'https://api.jikan.moe/v4/seasons/upcoming'
+    );
     const upcomingAnime = response.data.data;
 
     // Map and format the data
-    const formattedData = upcomingAnime.map(anime => ({
+    const formattedData = upcomingAnime.map((anime) => ({
       id: anime.mal_id,
       title: anime.title,
       mean: anime.score,
       year: new Date(anime.aired.from).getFullYear(),
       season: anime.season,
-      genres: anime.genres.map(genre => ({ id: genre.mal_id, name: genre.name })),
-      studios: anime.studios.map(studio => ({ id: studio.mal_id, name: studio.name })),
+      genres: anime.genres.map((genre) => ({
+        id: genre.mal_id,
+        name: genre.name,
+      })),
+      studios: anime.studios.map((studio) => ({
+        id: studio.mal_id,
+        name: studio.name,
+      })),
       num_episodes: anime.episodes,
       broadcast_day: anime.broadcast?.day_of_the_week || 'N/A',
       broadcast_time: anime.broadcast?.start_time || 'N/A',
-      streaming_service: anime.streaming?.map(service => ({
+      streaming_service: anime.streaming?.map((service) => ({
         name: service.name,
         url: service.url,
       })),
@@ -255,7 +349,7 @@ app.get('/api/populateUpcoming', async (req, res) => {
     }));
 
     const deduplicatedData = Array.from(
-      new Map(formattedData.map(item => [item.id, item])).values()
+      new Map(formattedData.map((item) => [item.id, item])).values()
     );
 
     // Perform the upsert with deduplicated data
@@ -265,10 +359,14 @@ app.get('/api/populateUpcoming', async (req, res) => {
 
     if (error) {
       console.error('Error inserting upcoming anime into Supabase:', error);
-      return res.status(500).json({ error: 'Failed to store upcoming anime data.' });
+      return res
+        .status(500)
+        .json({ error: 'Failed to store upcoming anime data.' });
     }
 
-    res.json({ message: 'Upcoming anime data fetched and stored successfully.' });
+    res.json({
+      message: 'Upcoming anime data fetched and stored successfully.',
+    });
   } catch (error) {
     console.error('Error fetching upcoming anime:', error.message);
     res.status(500).json({ error: 'Failed to fetch upcoming anime data.' });
