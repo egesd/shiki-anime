@@ -38,7 +38,7 @@ const supabaseKey = process.env.VITE_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const seasons = ['winter', 'spring', 'summer', 'fall'];
-const startYear = 2010; // Adjust as needed
+const startYear = 1980; // Adjust as needed
 const endYear = new Date().getFullYear();
 const maxRetries = 5;
 const initialDelay = 1000; // milliseconds

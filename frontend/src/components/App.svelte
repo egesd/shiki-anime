@@ -7,7 +7,7 @@
     hasMoreData,
   } from './animeStore.js';
   import { onMount } from 'svelte';
-  import { getCurrentSeason, isCurrentSeason } from '../utils/seasonUtils';
+  import { getCurrentSeason, isCurrentSeason, getSeasonFromDate } from '../utils/seasonUtils';
   import Header from './Header.svelte';
   import AnimeCard from './AnimeCard.svelte';
   import InfiniteScrollIndicator from './InfiniteScrollIndicator.svelte';
@@ -53,6 +53,21 @@
         : anime.genres.some((genre) => genre.name === selectedGenre);
     });
 
+  const currentSeason = getCurrentSeason();
+
+
+
+  // Separate into New Animes and Continuing
+  $: newAnimes = filteredAnime.filter((anime) => {
+    const animeSeason = getSeasonFromDate(anime.start_date);
+    return animeSeason === currentSeason;
+  });
+
+  $: continuingAnimes = filteredAnime.filter((anime) => {
+    const animeSeason = getSeasonFromDate(anime.start_date);
+    return animeSeason !== currentSeason;
+  });
+
   function handleMouseEnter(anime) {
     hoverAnime = anime;
   }
@@ -86,8 +101,6 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
     fetchAnimeDataFromSupabase(season, year, selectedGenre, showUpcoming, true);
   }
-
-
 </script>
 
 <Header />
@@ -143,26 +156,46 @@
       <p class="text-center text-accent1">{$error}</p>
     {/if}
 
-    <!-- Display Anime Cards -->
-    {#if filteredAnime && filteredAnime.length}
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4 w-4/5 self-center"
-      >
-        {#each filteredAnime as anime}
-          <SlideIn distance={30} duration={500}>
-            <AnimeCard
-              {anime}
-              isCurrentlyAiring={isCurrentSeason(anime)}
-              on:hoverEnter={handleMouseEnter}
-              on:hoverLeave={handleMouseLeave}
-            />
-          </SlideIn>
-        {/each}
-      </div>
-    {:else if !$loading && !filteredAnime.length}
-      <p class="text-center text-accent1">
-        No anime found for the selected criteria.
-      </p>
+    <!-- New Animes Section -->
+    {#if newAnimes.length > 0}
+      <section>
+        <h2 class="text-2xl font-bold mb-4 text-accent2">New Animes</h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          {#each newAnimes as anime}
+            <SlideIn distance={30} duration={500}>
+              <AnimeCard
+                {anime}
+                isCurrentlyAiring={isCurrentSeason(anime)}
+                on:hoverEnter={handleMouseEnter}
+                on:hoverLeave={handleMouseLeave}
+              />
+            </SlideIn>
+          {/each}
+        </div>
+      </section>
+    {/if}
+
+    <!-- Continuing Animes Section -->
+    {#if continuingAnimes.length > 0}
+      <section class="mt-8">
+        <h2 class="text-2xl font-bold mb-4 text-accent2">Continuing</h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          {#each continuingAnimes as anime}
+            <SlideIn distance={30} duration={500}>
+              <AnimeCard
+                {anime}
+                isCurrentlyAiring={isCurrentSeason(anime)}
+                on:hoverEnter={handleMouseEnter}
+                on:hoverLeave={handleMouseLeave}
+              />
+            </SlideIn>
+          {/each}
+        </div>
+      </section>
     {/if}
 
     <!-- Optionally, indicate no more data -->
