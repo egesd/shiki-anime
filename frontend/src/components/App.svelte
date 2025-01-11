@@ -158,10 +158,10 @@
 
     <!-- New Animes Section -->
     {#if newAnimes.length > 0}
-      <section>
+      <section class="flex flex-col">
         <h2 class="text-2xl font-bold mb-4 text-accent2">New Animes</h2>
         <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4 w-4/5 self-center"
         >
           {#each newAnimes as anime}
             <SlideIn distance={30} duration={500}>
@@ -179,10 +179,10 @@
 
     <!-- Continuing Animes Section -->
     {#if continuingAnimes.length > 0}
-      <section class="mt-8">
+      <section class="mt-8 flex flex-col">
         <h2 class="text-2xl font-bold mb-4 text-accent2">Continuing</h2>
         <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2k:grid-cols-6 4k:grid-cols-8 gap-4 w-4/5 self-center"
         >
           {#each continuingAnimes as anime}
             <SlideIn distance={30} duration={500}>
