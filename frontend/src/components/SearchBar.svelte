@@ -3,11 +3,8 @@
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faSearch } from '@fortawesome/free-solid-svg-icons';
   import { genreNameToIdMap } from '../config/genreMapping.js'; // Import the mapping
-  import ToggleUpcoming from './ToggleUpcoming.svelte';
 
   export let searchQuery;
-  export let showUpcoming;
-  export let toggleUpcoming;
 
   const dispatch = createEventDispatcher();
 
@@ -50,8 +47,6 @@
       {/each}
     </select>
   </div>
-
-  <ToggleUpcoming {showUpcoming} toggleUpcoming={toggleUpcoming} />
 </div>
 
 <style>

@@ -8,7 +8,7 @@ export const loading = writable(false);
 export const error = writable(null);
 export const hasMoreData = writable(true); // Track if more data is available
 
-export async function fetchAnimeDataFromSupabase(season, year, genre, showUpcoming, reset = false) {
+export async function fetchAnimeDataFromSupabase(season, year, genre, reset = false) {
   loading.set(true);
   error.set(null);
 
@@ -23,13 +23,9 @@ export async function fetchAnimeDataFromSupabase(season, year, genre, showUpcomi
       .from('anime')
       .select('*')
       .order('mean', { ascending: false, nullsFirst: false })
-      .order('members', { ascending: false });;
+      .order('members', { ascending: false });
 
-    if (showUpcoming) {
-      query = query.eq('year', 2025);
-    } else {
-      query = query.in('year', [year, 2025]);
-    }
+    query = query.eq('year', year);
 
     if (season !== 'all') {
       query = query.eq('season', season);

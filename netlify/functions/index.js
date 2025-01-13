@@ -310,69 +310,6 @@ app.get('/api/populate', async (req, res) => {
   }
 });
 
-// New Endpoint to Populate Upcoming Anime
-app.get('/api/populateUpcoming', async (req, res) => {
-  try {
-    // Fetch upcoming anime from the API
-    const response = await axios.get(
-      'https://api.jikan.moe/v4/seasons/upcoming'
-    );
-    const upcomingAnime = response.data.data;
-
-    // Map and format the data
-    const formattedData = upcomingAnime.map((anime) => ({
-      id: anime.mal_id,
-      title: anime.title,
-      mean: anime.score,
-      year: new Date(anime.aired.from).getFullYear(),
-      season: anime.season,
-      genres: anime.genres.map((genre) => ({
-        id: genre.mal_id,
-        name: genre.name,
-      })),
-      studios: anime.studios.map((studio) => ({
-        id: studio.mal_id,
-        name: studio.name,
-      })),
-      num_episodes: anime.episodes,
-      broadcast_day: anime.broadcast?.day_of_the_week || 'N/A',
-      broadcast_time: anime.broadcast?.start_time || 'N/A',
-      streaming_service: anime.streaming?.map((service) => ({
-        name: service.name,
-        url: service.url,
-      })),
-      main_picture: {
-        image_url: anime.images.jpg.image_url || null,
-        small_image_url: anime.images.jpg.small_image_url || null,
-        large_image_url: anime.images.jpg.large_image_url || null,
-      },
-    }));
-
-    const deduplicatedData = Array.from(
-      new Map(formattedData.map((item) => [item.id, item])).values()
-    );
-
-    // Perform the upsert with deduplicated data
-    const { data, error } = await supabase
-      .from('anime')
-      .upsert(deduplicatedData, { onConflict: ['id'] });
-
-    if (error) {
-      console.error('Error inserting upcoming anime into Supabase:', error);
-      return res
-        .status(500)
-        .json({ error: 'Failed to store upcoming anime data.' });
-    }
-
-    res.json({
-      message: 'Upcoming anime data fetched and stored successfully.',
-    });
-  } catch (error) {
-    console.error('Error fetching upcoming anime:', error.message);
-    res.status(500).json({ error: 'Failed to fetch upcoming anime data.' });
-  }
-});
-
 app.use((req, res) => {
   console.log(`Fallback route hit: ${req.originalUrl}`);
   res.status(404).json({ error: 'NOT_FOUND', route: req.originalUrl });

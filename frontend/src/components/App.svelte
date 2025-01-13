@@ -21,7 +21,6 @@
   let searchQuery = '';
   let selectedGenre = 'All Genres';
   let hoverAnime = null;
-  let showUpcoming = false; // New state variable for toggle
 
   // Debounce function remains unchanged
   function debounce(func, wait) {
@@ -36,9 +35,6 @@
   $: filteredAnime;
   $: filteredAnime = $animeData
     .filter((anime) => {
-      if (showUpcoming) {
-        return anime.year === 2025;
-      }
       return anime.year === year;
     })
     .filter((anime) => {
@@ -54,8 +50,6 @@
     });
 
   const currentSeason = getCurrentSeason();
-
-
 
   // Separate into New Animes and Continuing
   $: newAnimes = filteredAnime.filter((anime) => {
@@ -78,7 +72,7 @@
 
   // Infinite scroll handler with loading, hasMoreData, and genre check
   function handleScroll() {
-    if ($loading || !$hasMoreData || showUpcoming) return; // Stop if loading, no more data, or showing upcoming
+    if ($loading || !$hasMoreData) return; // Stop if loading or no more data
     if (
       window.innerHeight + window.scrollY >=
       document.body.offsetHeight - 500
@@ -90,7 +84,7 @@
   const debouncedHandleScroll = debounce(handleScroll, 200);
 
   onMount(() => {
-    fetchAnimeDataFromSupabase(season, year, selectedGenre, showUpcoming);
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
     window.addEventListener('scroll', debouncedHandleScroll);
     return () => window.removeEventListener('scroll', debouncedHandleScroll);
   });
@@ -99,7 +93,19 @@
   function handleGenreChange(newGenre) {
     selectedGenre = newGenre;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    fetchAnimeDataFromSupabase(season, year, selectedGenre, showUpcoming, true);
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
+  }
+
+  function handleSeasonChange(newSeason) {
+    season = newSeason;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
+  }
+
+  function handleYearChange(newYear) {
+    year = newYear;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetchAnimeDataFromSupabase(season, year, selectedGenre, true);
   }
 </script>
 
@@ -116,7 +122,6 @@
       {season}
       {year}
       {selectedGenre}
-      {showUpcoming}
       on:filterChange={(e) => (mediaFilter = e.detail)}
       on:searchQueryChange={(e) => (searchQuery = e.detail)}
       on:genreChange={(e) => handleGenreChange(e.detail)}
@@ -127,7 +132,6 @@
           season,
           year,
           selectedGenre,
-          showUpcoming,
           true
         );
       }}
@@ -138,7 +142,6 @@
           season,
           year,
           selectedGenre,
-          showUpcoming,
           true
         );
       }}
@@ -199,7 +202,7 @@
     {/if}
 
     <!-- Optionally, indicate no more data -->
-    {#if !$hasMoreData && $animeData.length > 0 && !showUpcoming}
+    {#if !$hasMoreData && $animeData.length > 0}
       <p class="text-center text-xl mt-4 text-black">No more anime to load.</p>
     {/if}
   </div>
