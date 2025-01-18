@@ -61,7 +61,6 @@
   function handleYearChange(event) {
     dispatch('yearChange', event.detail);
   }
-
 </script>
 
 <div bind:this={sentinel} class="h-[1px] pointer-events-none"></div>

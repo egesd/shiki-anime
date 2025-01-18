@@ -1,7 +1,5 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faSearch } from '@fortawesome/free-solid-svg-icons';
   import { genreNameToIdMap } from '../config/genreMapping.js'; // Import the mapping
 
   export let searchQuery;
@@ -47,6 +45,7 @@
       {/each}
     </select>
   </div>
+
 </div>
 
 <style>
