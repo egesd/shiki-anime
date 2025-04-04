@@ -53,13 +53,24 @@
 
   // Separate into New Animes and Continuing
   $: newAnimes = filteredAnime.filter((anime) => {
+    if (!anime.start_date) return false;
+    const animeYear = new Date(anime.start_date).getFullYear();
     const animeSeason = getSeasonFromDate(anime.start_date);
-    return animeSeason === currentSeason;
+    return animeYear === year && animeSeason === season;
   });
 
   $: continuingAnimes = filteredAnime.filter((anime) => {
+    if (!anime.start_date) return false;
+    const animeStartDate = new Date(anime.start_date);
+    const currentDate = new Date();
+    const animeYear = animeStartDate.getFullYear();
     const animeSeason = getSeasonFromDate(anime.start_date);
-    return animeSeason !== currentSeason;
+    
+    // Show as continuing if:
+    // 1. Started before current season/year
+    // 2. Is still airing (status check)
+    return (animeYear < year || (animeYear === year && animeSeason !== season)) && 
+           anime.status === 'currently_airing';
   });
 
   function handleMouseEnter(anime) {

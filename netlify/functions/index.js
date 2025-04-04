@@ -166,7 +166,7 @@ async function fetchAndStoreAnimeData(year, season) {
             limit,
             offset,
             fields:
-              'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast,popularity,alternative_titles,start_date,end_date,synopsis,status,members',
+              'mean,main_picture,title,media_type,genres,studios,num_episodes,broadcast,popularity,alternative_titles,start_date,end_date,synopsis,status,num_list_users',
           },
           timeout: 10000,
         }
@@ -202,6 +202,7 @@ async function fetchAndStoreAnimeData(year, season) {
         }
       }
       uniqueData.sort((a, b) => (b.node.mean ?? 0) - (a.node.mean ?? 0));
+      console.log('unique', uniqueData);
 
       const { data, error } = await supabase.from('anime').upsert(
         uniqueData.map((anime) => ({
@@ -224,7 +225,7 @@ async function fetchAndStoreAnimeData(year, season) {
           end_date: anime.node.end_date,
           synopsis: anime.node.synopsis,
           status: anime.node.status,
-          members: anime.node.members,
+          members: anime.node.num_list_users,
         })),
         { onConflict: ['id'] }
       );
