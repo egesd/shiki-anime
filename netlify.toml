@@ -6,16 +6,14 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+  # Weekly full anime data update
   [functions.scheduled-fetch]
-    schedule = "0 0 * * 0"
+    schedule = "0 0 * * 0"  # Every Sunday at midnight
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/index"
-  status = 200
-  force = true
+  # Daily score updates
+  [functions.update-scores]
+    schedule = "0 0 * * *"  # Every day at midnight
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  # Supabase keepalive ping
+  [functions.keepalive]
+    schedule = "0 */12 * * *"  # Every 12 hours
