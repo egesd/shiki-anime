@@ -52,9 +52,10 @@ async function updateAnimeWithRetry(anime, attempt = 1) {
 }
 
 exports.handler = async function () {
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Function timed out')), TIMEOUT)
-  );
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error('Function timed out')), TIMEOUT);
+  });
 
   const updateProcess = async () => {
     try {
@@ -99,7 +100,8 @@ exports.handler = async function () {
   };
 
   try {
-    return await Promise.race([updateProcess(), timeoutPromise]);
+    const result = await Promise.race([updateProcess(), timeoutPromise]);
+    return result;
   } catch (error) {
     console.error('Score update failed:', error.message);
     return {
@@ -110,5 +112,7 @@ exports.handler = async function () {
         timestamp: new Date().toISOString()
       })
     };
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
   }
 };
